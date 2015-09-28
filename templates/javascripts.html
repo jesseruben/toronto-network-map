@@ -1,0 +1,66 @@
+{% load compress %}
+{% load staticfiles %}
+
+{% compress js %}
+
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'bower_components/angular/angular.js' %}"></script>
+    <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js' %}"></script>
+    <script src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
+    <script src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
+    <script src="{% static 'bower_components/angular-translate/angular-translate.js' %}"></script>
+    <script src="{% static 'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js' %}"></script>
+    <script src="{% static 'bower_components/angular-messages/angular-messages.js' %}"></script>
+    <script src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
+    <script src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+    <script src="{% static 'bower_components/angular-sanitize/angular-sanitize.js' %}"></script>
+    <script src="{% static 'bower_components/angular-touch/angular-touch.js' %}"></script>
+    <script src="{% static 'bower_components/angular-notify/dist/angular-notify.js' %}"></script>
+    <script src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js' %}"></script>
+    <script src="{% static 'bower_components/sprintf/dist/sprintf.min.js' %}"></script>
+    <script src="{% static 'bower_components/moment/moment.js' %}"></script>
+    <script src="{% static 'bower_components/angular-logger/dist/angular-logger.js' %}"></script>
+    <script src="{% static 'bower_components/d3/d3.js' %}"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script type="text/javascript" src="{% static 'js/ndtApp.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndtApp.constants.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndtApp.routes.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndtApp.config.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/static/static.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/static/controllers/staticpage.controller.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/contact/contact.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/contact/controllers/contact.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/contact/services/contact.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/speedtest/speedtest.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/speedtest/controllers/speedtest.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/speedtest/services/speedtest.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/reports/reports.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/reports/controllers/reports.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/reports/services/reports.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/authentication/authentication.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/directives/authentication.directive.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/services/authentication.service.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/controllers/register.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/controllers/login.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/controllers/account.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/controllers/forgotpassword.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/controllers/setpassword.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/authentication/controllers/deactivationmodal.controller.js' %}"></script>
+
+    <!-- endbuild -->
+
+
+
+{% endcompress %}

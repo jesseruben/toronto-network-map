@@ -1,0 +1,92 @@
+# cache directories
+Thumbs.db
+*.DS_Store
+*.empty
+
+#pycharm project files
+.idea
+
+#netbeans project files
+nbproject
+
+#eclipse, zend studio, aptana or other eclipse like project files
+.buildpath
+.project
+.settings
+._*
+*.swp
+*.pyc
+
+
+# sass cache files
+*.sass-cache
+
+# mac deployment helpers
+switch
+index
+
+# runtime and cache directories
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.log.*
+*.log~
+*.pot
+
+# Sphinx documentation
+docs/_build/
+
+
+#sqllite
+db.sqlite3
+
+#node files
+node_modules
+
+#cities light data
+cities_light/data/

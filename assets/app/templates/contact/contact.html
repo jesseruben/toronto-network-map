@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <h1 translate="CONTACT"></h1>
+        <div class="well">
+          <form role="form" novalidate name="contactForm" ng-submit="vm.sendMessage()" id="register-form">
+            <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[contactForm.userEmail.$invalid && contactForm.userEmail.$dirty]">
+              <label for="register__email" translate="EMAIL"></label>
+              <input class="form-control" id="register__email" ng-model="vm.email" name="userEmail"
+                     placeholder="mail@example.com"  type="email" valid-email dir="ltr" required/>
+                <span ng-show="contactForm.userEmail.$valid" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-check-square-o"></i>
+                </span>
+                <span ng-show="contactForm.userEmail.$invalid && contactForm.userEmail.$dirty" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-warning"></i>
+                </span>
+
+                <div class="text-warning" ng-show="contactForm.userEmail.$invalid && contactForm.userEmail.$dirty">
+                        {{vm.getError(contactForm.userEmail.$error)}}
+                </div>
+            </div> <!--userEmail-->
+
+            <div class="form-group has-feedback" ng-class="{true: 'has-error', false:'has-success'}[contactForm.subject.$invalid && contactForm.subject.$dirty]">
+              <label for="register__subject" translate="SUBJECT"></label>
+              <input type="text" class="form-control" id="register__subject" ng-model="vm.subject" name="subject"
+                     placeholder="{{ 'SUBJECT' | translate }}" ng-minlength="4" ng-maxlength="100" required/>
+                <span ng-show="contactForm.subject.$valid" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-check-square-o"></i>
+                </span>
+                <span ng-show="contactForm.subject.$invalid && contactForm.subject.$dirty" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-warning"></i>
+                </span>
+                <div class="text-warning" ng-show="contactForm.subject.$invalid && contactForm.subject.$dirty">
+                         {{vm.getError(contactForm.subject.$error, 4, 100)}}
+                </div>
+            </div> <!--subject-->
+
+            <div class="form-group has-feedback" ng-class="{true: 'has-error', false:'has-success'}[contactForm.message.$invalid && contactForm.message.$dirty]">
+              <label for="register__message" translate="MESSAGE"></label>
+              <textarea class="form-control" id="register__message" ng-model="vm.message" name="message"
+                     placeholder="{{ 'MESSAGE' | translate }}" ng-minlength="10" ng-maxlength="500" required></textarea>
+                <span ng-show="contactForm.message.$valid" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-check-square-o"></i>
+                </span>
+                <span ng-show="contactForm.message.$invalid && contactForm.message.$dirty" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-warning"></i>
+                </span>
+                <div class="text-warning" ng-show="contactForm.message.$invalid && contactForm.message.$dirty">
+                         {{vm.getError(contactForm.message.$error, 10, 500)}}
+                </div>
+            </div> <!--message-->
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-block btn-primary" ng-disabled="contactForm.$invalid">{{ 'SUBMIT' | translate }}</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+</div>

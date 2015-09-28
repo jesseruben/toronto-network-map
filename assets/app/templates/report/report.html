@@ -1,0 +1,181 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="vm.dismiss('closed directly')" aria-hidden="true">&times;</button>
+	<h3 translate="REPORTSUBMISSION"></h3>
+</div>
+
+<div class="modal-body well">
+	<div>
+		<form role="form" novalidate name="reportForm">
+		    <div ng-switch="vm.getCurrentStep()" class="slide-frame" style="overflow: auto">
+
+                <div ng-switch-when="one" class="wave">
+                    <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[reportForm.country.$invalid && reportForm.country.$dirty]">
+                        <label for="report_country" translate="COUNTRY"></label>
+                        <input type="text" class="form-control" id="report_country"
+                               ng-model="vm.country" placeholder="{{ 'COUNTRY_PLACEHOLDER' | translate  }}"
+                               name="country"/>
+                        <span ng-show="reportForm.country.$valid" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-check-square-o"></i>
+                        </span>
+                        <span ng-show="reportForm.country.$invalid && reportForm.country.$dirty" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-warning"></i>
+                        </span>
+                        <div class="text-warning" ng-show="reportForm.country.$invalid && reportForm.country.$dirty">
+                             {{vm.getError(reportForm.country.$error)}}
+                        </div>
+                    </div>
+
+
+                    <div class="form-group has-feedback" ng-if="vm.lang =='fa'">
+                      <label for="report__province">{{ 'PROVINCE' | translate }}</label>
+                        <select class="form-control" placeholder="PROVINCE" ng-repeat="province in vm.provinces" id="province" name="province" ng-model="vm.province">
+                            <option value="" disabled selected translate="PROVINCE"></option>
+                            <option ng-repeat="(key,value) in province" value="{{ value.name }}">{{ value.name }}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group has-feedback" ng-if="vm.lang != 'fa'" ng-class="{true:'has-error', false:'has-success'}[reportForm.province.$invalid && reportForm.province.$dirty]">
+                        <label for="report__province" translate="PROVINCE"></label>
+                        <input type="text" class="form-control" id="report__province"
+                               ng-model="vm.province" placeholder="{{ 'PROVINCE' | translate  }}" name="province"/>
+                        <span ng-show="reportForm.province.$valid" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-check-square-o"></i>
+                        </span>
+                        <span ng-show="reportForm.province.$invalid && reportForm.province.$dirty" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-warning"></i>
+                        </span>
+                        <div class="text-warning" ng-show="reportForm.province.$invalid && reportForm.province.$dirty">
+                                {{vm.getError(reportForm.province.$error)}}
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[reportForm.city.$invalid && reportForm.city.$dirty]">
+                        <label for="report__city" translate="CITY"></label>
+                        <input type="text" class="form-control" id="report__city"
+                               ng-model="vm.city" placeholder="{{ 'CITY_PLACEHOLDER' | translate  }}" name="city"/>
+                        <span ng-show="reportForm.city.$valid" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-check-square-o"></i>
+                        </span>
+                        <span ng-show="reportForm.city.$invalid && reportForm.city.$dirty" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-warning"></i>
+                        </span>
+                        <div class="text-warning" ng-show="reportForm.city.$invalid && reportForm.city.$dirty">
+                                {{vm.getError(reportForm.city.$error)}}
+                        </div>
+                    </div>
+
+
+                </div> <!--first tab-->
+
+                <div ng-switch-when="two" class="wave">
+                   <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[reportForm.isp.$invalid && reportForm.isp.$dirty]">
+                        <label for="report__ISP" translate="ISP"></label>
+                        <input type="text" class="form-control" id="report__ISP"
+                               ng-model="vm.ISP" placeholder="{{ 'ISP_PLACEHOLDER' | translate  }}" name="isp"/>
+                        <span ng-show="reportForm.isp.$valid" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-check-square-o"></i>
+                        </span>
+                        <span ng-show="reportForm.isp.$invalid && reportForm.isp.$dirty" class="form-control-feedback" aria-hidden="true">
+                             <i class="fa fa-warning"></i>
+                        </span>
+                        <div class="text-warning" ng-show="reportForm.isp.$invalid && reportForm.isp.$dirty">
+                                {{vm.getError(reportForm.isp.$error)}}
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                      <label for="report__service_type" translate="SERVICE_TYPE"></label>
+                        <select class="form-control" placeholder="SERVICE TYPE" id="service_type" name="service_type" ng-model="vm.serviceType">
+                            <option value="" disabled selected translate="SERVICE_TYPE"></option>
+                            <option value="HOME" translate="HOME"></option>
+                            <option value="BUSINESS" translate="BUSINESS"></option>
+                            <option value="PUBLIC" translate="PUBLIC"></option>
+                        </select>
+                    </div>
+                    <div class="form-group has-feedback">
+                      <label for="report__ISP_speed" translate="NOMINAL_DOWNLOAD_SPEED"></label>
+                        <select class="form-control" placeholder="SPEED" id="isp_download_speed" name="isp_download_speed" ng-model="vm.nominal_download_rate">
+                            <option value="" disabled selected translate="NOMINAL_DOWNLOAD_SPEED"></option>
+                            <option value="64" translate="64k"></option>
+                            <option value="128" translate="128k"></option>
+                            <option value="512" translate="512k"></option>
+                            <option value="1" translate="1M"></option>
+                            <option value="2" translate="2M"></option>
+                            <option value="3" translate="3-5M"></option>
+                            <option value="6" translate="6-9M"></option>
+                            <option value="10" translate="10M"></option>
+                        </select>
+                    </div>
+                    <div class="form-group has-feedback">
+                      <label for="report__ISP_speed" translate="NOMINAL_UPLOAD_SPEED"></label>
+                        <select class="form-control" placeholder="SPEED" id="isp_upload_speed" name="isp_upload_speed" ng-model="vm.nominal_upload_rate">
+                            <option value="" disabled selected translate="NOMINAL_UPLOAD_SPEED"></option>
+                            <option value="32" translate="32k"></option>
+                            <option value="64" translate="64k"></option>
+                            <option value="128" translate="128k"></option>
+                            <option value="512" translate="512k"></option>
+                            <option value="1" translate="1M"></option>
+                            <option value="2" translate="2M"></option>
+                            <option value="3" translate="3-5M"></option>
+                            <option value="6" translate="6-9M"></option>
+                            <option value="10" translate="10M"></option>
+                        </select>
+                    </div>
+                    <div class="form-group has-feedback">
+                      <label for="report__bandwidth" translate="BANDWIDTH"></label>
+                        <select class="form-control" placeholder="BANDWIDTH" id="bandwidth" name="bandwidth" ng-model="vm.bandwidth">
+                            <option value="" disabled selected translate="BANDWIDTH"></option>
+                            <option value="30" translate="30G"></option>
+                            <option value="60" translate="60G"></option>
+                            <option value="120" translate="120G"></option>
+                            <option value="250" translate="250G"></option>
+                            <option value="500" translate="500G"></option>
+                        </select>
+                    </div>
+                </div> <!--second tab-->
+
+                <div ng-switch-when="three" class="wave">
+                    <div class="form-group has-feedback">
+                        <label id="report__quality" for="report__quality" translate="OVERALSATISFACTION"></label>
+                        <rating ng-model="vm.rate_overall" max="vm.ratingMax" readonly="false" on-hover="vm.hoveringOver(value, overall)" on-leave="overStar = null"></rating>
+                        <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label id="report__quality" for="report__quality" translate="CUSTOMERSERVICE"></label>
+                        <rating ng-model="vm.rate_customerService" max="vm.ratingMax" readonly="isReadonly" on-hover="hoveringOver(value, customerService)" on-leave="overStar = null"></rating>
+                        <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="report__promotion" translate="PROMOTION"></label>
+                        <input type="checkbox" ng-model="vm.promotion" name="promotion">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="report__vpn" translate="VPN"></label>
+                        <input type="checkbox" ng-model="vm.vpn" name="vpn">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="report_price" translate="PRICE"></label>
+                        <input type="text" class="form-control" id="report_price"
+                               ng-model="vm.price" placeholder="{{ 'PRICE_PLACEHOLDER' | translate  }}"
+                               name="price"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="register__firewall" translate="FIREWALLIFANY"></label>
+                        <input type="text" placeholder="{{ 'FIREWALL_PLACEHOLDER' | translate  }}" class="form-control" id="register__firewall" ng-model="vm.firewall"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register__error" translate="ANYCOMMENT"></label>
+                        <textarea  placeholder="{{ 'COMMENTPLACEHOLDER' | translate }}" class="form-control" rows="4" id="register__comment" ng-model="vm.comment"/>
+                    </div>
+                    </div>
+                </div> <!--third tab-->
+            </div>
+        </form>
+	</div> <!--modal body -->
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="vm.handlePrevious()" ng-show="!vm.isFirstStep()" ng-cloak translate="BACK"></button>
+	<button class="btn btn-primary" ng-disabled="reportForm.$invalid" ng-click="vm.handleNext()">{{vm.getNextLabel()}}</button>
+</div>

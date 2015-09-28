@@ -1,0 +1,34 @@
+<div class="row" style="width:1000px;">
+	<div class="col-md-5">
+		<div id="svg"></div>
+		<div class="center-block" style="width: 200px;">
+			<a class="btn btn-lg btn-block btn-success" ng-disabled="vm.testInProgress" ng-click="vm.startTest()">{{ vm.testButtonLabel }}</a>
+		</div>
+        <br>
+		<!--<div class="center-block" style="width: 200px;">
+			<a class="btn btn-lg btn-block btn-success" ng-click="vm.open()">Submit report</a>
+		</div>-->
+    </div>
+    <div class="col-lg-7">
+		<p class="bg-primary" style="margin-top:60px;"><strong style="color:pink; margin-left: 5px;">Status: </strong>{{ vm.status }}</p>
+		<table class="table table-hover" style="">
+		    <tr class="success">
+		    	<td><strong>Servername</strong></td>
+		    	<td><strong>Download Speed</strong></td>
+		    	<td><strong>Upload Speed</strong></td>
+		  	</tr>
+		  	<tr ng-repeat='server in vm.serverList'>
+		  		<td>{{ server.name }}</td>
+		  		<td class="center-block" ng-bind-html="server.downloadSpeed"></td>
+		  		<td ng-bind-html="server.uploadSpeed"></td>
+		  	</tr>
+		  	<tr class="info" ng-show="vm.showAverage">
+		  		<td><strong>Average </strong></td>
+		  		<td ng-bind-html="vm.downloadAverage"></td>
+		  		<td ng-bind-html="vm.uploadAverage"></td>
+		  	</tr>
+		</table>
+    </div>
+</div>
+
+

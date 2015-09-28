@@ -1,0 +1,10 @@
+{% load compress %}
+{% load staticfiles %}
+
+
+{% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/app.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/angular-notify/angular-notify.css' %}" />
+{% endcompress %}

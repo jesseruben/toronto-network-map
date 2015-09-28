@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="ndtApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Reveiew and rate your isp like you never did">
+  <meta name="keywords" content="Internet service provider, ISP, speedtest">
+  <title></title>
+{% load staticfiles %}
+  <base href="/">
+  {% if DEBUG %}
+    {% include 'stylesheets.html' %}
+  {% else %}
+    {% include 'stylesheets.prod.html' %}
+  {% endif %}
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    {% include 'navbar.html' %}
+
+    <div class="container">
+      <div ng-view=""></div>
+    </div>
+
+
+
+
+  {% if DEBUG %}
+    {% include 'javascripts.html' %}
+  {% else %}
+    {% include 'javascripts.prod.html' %}
+  {% endif %}
+</body>
+
+</html>
