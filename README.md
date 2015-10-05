@@ -1,4 +1,4 @@
-# [Toronto Network Map] [docs]
+# Toronto Network Map
 Toronto network map is a portal for [M-LAB](http://www.measurementlab.net/) NDT test which focuses on
 mapping speed and quality of the Internet in Toronto.
 
