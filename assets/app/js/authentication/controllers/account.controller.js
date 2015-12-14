@@ -17,6 +17,12 @@
   function AccountController(Authentication, $modal, $location, $cookies, $filter) {
     var vm = this;
 
+    vm.activeProfile = false;
+    vm.activeAnalytics = false;
+    vm.activeUserInfo = true;
+    vm.activeUpdatePassword = false;
+    vm.activeDeactivation = false;
+
     vm.updatePassword = updatePassword;
     vm.getError = getError;
     vm.deactivationOpenModal = deactivationOpenModal;
@@ -37,7 +43,7 @@
       }
       // Angular 1.3 syntax
       // var account = JSON.parse($cookies.authenticatedAccount);
-      var account = JSON.parse($cookies.get('authenticatedAccount'));
+      var account = JSON.parse(localStorage.authenticatedAccount);
       vm.createdAt = account.created_at;
       vm.email = account.email;
       vm.updatedAt = account['updatedAt'];
@@ -95,7 +101,7 @@
           } else if (error.pwmatch){
               return $filter('translate')('ERROR_PASSWORD_MATCH');
           }
-      } else return;
+      }
     }
 
   }

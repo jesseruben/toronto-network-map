@@ -22,19 +22,22 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
             name : 'Toronto',
             url : 'NDT.IUPUI.MLAB1.YYZ01.MEASUREMENT-LAB.ORG',
             downloadSpeed : blank,
-            uploadSpeed : blank
+            uploadSpeed : blank,
+            latency: blank
         },
         {
             name : 'Miami',
             url : 'ndt.iupui.mlab1.mia03.measurement-lab.org',
             downloadSpeed : blank,
-            uploadSpeed : blank
+            uploadSpeed : blank,
+            latency: blank
         },
         {
             name : 'Chicago',
             url : 'ndt.iupui.mlab1.ord02.measurement-lab.org',
             downloadSpeed : blank,
-            uploadSpeed : blank
+            uploadSpeed : blank,
+            latency: blank
         }
     ];
     vm.testButtonLabel = 'Test your speed';
@@ -51,8 +54,9 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
     vm.time_switched = undefined;
     vm.testInProgress = false;
     vm.downloadRates = [];
-    vm.bindingHash = '';
     vm.uploadRates = [];
+    vm.latencyRates = [];
+    vm.bindingHash = '';
     vm.NDT_STATUS_LABELS = {
         'preparing_s2c': 'Preparing Download',
         'preparing_c2s': 'Preparing Upload',
@@ -67,6 +71,7 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
     };
     vm.downloadAverage = getAverage(vm.downloadRates);
     vm.uploadAverage = getAverage(vm.uploadRates);
+    vm.latencyAverage = getAverage(vm.latencyRates);
     /* End of Variables */
 
     /* Functions declaration */
@@ -101,9 +106,11 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         {
             vm.serverList[i].downloadSpeed = blank;
             vm.serverList[i].uploadSpeed = blank;
+            vm.serverList[i].latency = blank;
         }
         vm.downloadAverage = getAverage(vm.downloadRates);
         vm.uploadAverage = getAverage(vm.uploadRates);
+        vm.latencyAverage = getAverage(vm.latencyRates);
         vm.showAverage = false;
         vm.testInProgress = true;
         vm.testButtonLabel = 'Test in progress';
@@ -184,7 +191,6 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         d3.selectAll("#progress-meter text").classed("ready", true);
         d3.selectAll("#progress-meter .foreground").classed("complete", true);
         d3.selectAll("#progress-meter").classed("progress-error", false);
-        return;
     }
 
 
@@ -206,8 +212,7 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         d3.selectAll('.result_value, .result_label').remove();
         d3.select('#progress-meter').classed('progress-complete', false);
         d3.selectAll("#progress-meter text").classed("ready", true);
-        return;
-    };
+    }
 
 
     /**
@@ -229,7 +234,6 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         } else {
             vm.status = status + ' ' + information;
         }
-        return;
     }
 
 
@@ -249,10 +253,9 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
 
     /**
      * Simulates the download and upload movement on the gage
-     * @param argument dummy argument
      * @returns {boolean}
      */
-    function meter_movement (argument) {
+    function meter_movement () {
         var end_angle,
             start_angle,
             progress_percentage;
@@ -262,11 +265,9 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         var time_in_progress = new Date().getTime() - vm.time_switched;
 
         if (vm.state === "running_s2c" || vm.state === "running_c2s") {
-
             progress_percentage = (time_in_progress < 10000) ?
                 (time_in_progress / 10000) : 1;
             progress = twoPi * progress_percentage;
-
             if (vm.state === "running_c2s") {
                 progress = twoPi + -1 * progress;
                 end_angle = vm.arc.endAngle(twoPi);
@@ -285,10 +286,7 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         d3.select('.foreground').attr("d", end_angle);
         d3.select('.foreground').attr("d", start_angle);
 
-        if (vm.state === 'finished_all') {
-            return true;
-        }
-        return false;
+        return vm.state === 'finished_all';
     }
 
     /****    All callback functions go below this line        ****/
@@ -329,11 +327,15 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         var progress_label = vm.NDT_STATUS_LABELS[vm.state];
 
         if (returned_message === 'interval_s2c' && vm.state === 'running_s2c') {
-            vm.serverList[vm.iterator].downloadSpeed = '<i class="fa fa-spinner fa-spin"></i>'
+            vm.serverList[vm.iterator].downloadSpeed = '<i class="fa fa-spinner fa-spin"></i>';
             throughputRate = passedResults.s2cRate;
         } else if (returned_message === 'interval_c2s' && vm.state === 'running_c2s') {
             vm.serverList[vm.iterator].uploadSpeed = '<i class="fa fa-spinner fa-spin"></i>';
             throughputRate = passedResults.c2sRate;
+        }
+        else {
+            vm.serverList[vm.iterator].latency = '<i class="fa fa-spinner fa-spin"></i>';
+            throughputRate = passedResults.MinRTT;
         }
 
         if (throughputRate !== undefined) {
@@ -364,7 +366,6 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         for (metric_name in results_to_display) {
             if (results_to_display.hasOwnProperty(metric_name) &&
                 passed_results.hasOwnProperty(metric_name)) {
-
                 if (metric_name !== 'MinRTT') {
                     result_string = Number(passed_results[metric_name] /
                         1000).toFixed(2);
@@ -391,11 +392,13 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
                             vm.uploadAverage = getAverage(vm.uploadRates);
                         }
                     }
-
                     result_string += ' Mbps';
                 } else {
                     result_string = Number(passed_results[metric_name]).toFixed(2);
                     result_string += ' ms';
+                    vm.latencyRates.push(result_string);
+                    vm.serverList[vm.iterator].latency = result_string;
+                    vm.latencyAverage = getAverage(vm.latencyRates);
                 }
                 vm.update_display(results_to_display[metric_name], result_string);
             }
@@ -445,31 +448,4 @@ function SpeedtestController($scope, $modal, Report, Speedtest, PATH, $log) {
         }
     }
 
-    function open() {
-        var modalInstance = $modal.open({
-            templateUrl: PATH.BASE_TEMPLATE_URL + 'report/report.html',
-            controller: 'ReportController',
-            controllerAs: 'vm',
-            resolve: {
-                passedData: function () {
-                    //TODO: get this dynamically from the running test
-                    return {test_id:1};
-                }
-            }
-        });
-        /*
-         When we stored the reference of our modal as modalInstance, it came with a result property
-         that is actually a promise and is resolved when the modal is closed or dismissed.
-         */
-        modalInstance.result
-            .then(function (data) {
-                var response = Report.register(data)
-            },
-            function (reason) {
-                // if the modal is dismissed by close button/ or backdrop cancelled
-                // one of the reason is triggered in modal.html partial, the other is backdrop which is clicking
-                // outside of the modal
-            });
-    }
-
-} // End of controller
+}// End of controller

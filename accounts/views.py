@@ -1,7 +1,6 @@
 from rest_framework import permissions, status, views, viewsets
 from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
-from rest_framework.views import APIView
 from accounts.models import User, UserUID
 from accounts.serializers import UserSerializer, UserUIDSerializer, PasswordSerializer
 from accounts.permissions import IsOwner
@@ -10,13 +9,12 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import IntegrityError
 from django.conf import settings
 from django.db import transaction
 from django.core.urlresolvers import reverse
 import logging
 import hashlib
-import random
+from random import SystemRandom
 import datetime
 import json
 import os
@@ -24,9 +22,9 @@ import string
 import codecs
 logger = logging.getLogger(__name__)
 
+
 class UserViewSet(viewsets.ModelViewSet):
     # This is the user viewset. It is used for creating/validating a user given information.
-
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'generic'
     queryset = User.objects.all()
@@ -60,22 +58,21 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         data = request.data
-
         try:
             serializer = self.serializer_class(data=data)
 
             if serializer.is_valid():
                 email = serializer.validated_data['email']
-                User.objects.create_user(**serializer.validated_data)
+                user = User.objects.create_user(**serializer.validated_data)
                 # originally response would return serializer.data
-                logger.info(self.msgs['finish_success'].format(email))
+                logger.info(self.msgs['finish_success'].format(user.log_guid))
                 return Response({
                     'status': _('Success'),
                     'message':self.msgs['account_created']
                 }, status=status.HTTP_201_CREATED)
             logger.error(self.errs['ser_invalid'].format(serializer.errors))
             return Response({
-                # Translators : This message is generated during user creation
+                # Translators: This message is generated during user creation
                 'status': _('Bad request'),
                 'message': _('User info is invalid.'),
                 'errors': 'Validation error'
@@ -87,6 +84,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'status': _('Bad request'),
                 'message': e.message
             }, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginView(views.APIView):
     """
@@ -109,10 +107,9 @@ class LoginView(views.APIView):
         'combination_invalid': _('Username/password combination invalid.')
     }
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = json.loads(request.body)
         email = data.get('email', None)
-        logger.info("LoginView.post is called. User: {0}".format(email))
         password = data.get('password', None)
         account = authenticate(email=email, password=password)
         if account is not None:
@@ -120,30 +117,31 @@ class LoginView(views.APIView):
             if account.is_active:
                 login(request, account)
                 serialized = UserSerializer(account)
-                logger.info(self.msgs['login_success'].format(email))
+                logger.info(self.msgs['login_success'].format(request.user.log_guid))
                 return Response({
                     'account': serialized.data,
                     'status': _('Success'),
                     'message': self.msgs['login_msg']
                 }, status=status.HTTP_200_OK)
             else:
-                logger.info(self.errs['user_inactivated'].format(email))
+                logger.info(self.errs['user_inactivated'].format(request.user.log_guid))
                 # Right now we remove the accounts from the DB upon deactivation, so we should never get into this state
                 return Response({
                     'status': _('Unauthorized'),
                     'message': self.msgs['cannot_login']
                 }, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            logger.info(self.errs['no_account'].format(email))
+            logger.info('User attempts to login with credentials and do not exist')
             return Response({
                 'status': _('Unauthorized'),
                 'message': self.msgs['combination_invalid']
             }, status=status.HTTP_401_UNAUTHORIZED)
 
+
 class LogoutView(views.APIView):
-    def post(self, request, format=None):
+    def post(self, request):
         if request.user.is_authenticated():
-            logger.info("LogoutView.post is called. User: {0}".format(request.user.email))
+            logger.info("LogoutView.post is called. User: {0}".format(request.user.log_guid))
         else:
             logger.info("LogoutView.post is called by anonymous user.")
         logout(request)
@@ -151,6 +149,7 @@ class LogoutView(views.APIView):
             'status': _('Success'),
             'message': _('You are successfully logged out.')
         }, status=status.HTTP_200_OK)
+
 
 class UpdatePasswordView(views.APIView):
     """
@@ -179,12 +178,10 @@ class UpdatePasswordView(views.APIView):
         'cannot_update_pass': _('You cannot update the password on this account.'),
     }
 
-    def post(self, request, format=None):
-        logger.info("UpdatePasswordView.post is called. User: {0}".format(request.user.email))
+    def post(self, request):
+        logger.info("UpdatePasswordView.post is called. User: {0}".format(request.user.log_guid))
         # TODO: check if front end sends a json file or normal request
-        # data = json.loads(request.body)
         data = request.data
-        logger.debug("This is the data {0}".format(data))
         update_password_serializer = self.serializer_class(data=data)
         if update_password_serializer.is_valid():
             password = update_password_serializer.validated_data['password']
@@ -199,7 +196,7 @@ class UpdatePasswordView(views.APIView):
                             serializer.save()
                             account = authenticate(email=request.user.email, password=new_password)
                             login(request, account)
-                            logger.info(self.msgs['finish_success'].format(request.user.email))
+                            logger.info(self.msgs['finish_success'].format(request.user.log_guid))
                             return Response({
                                 'status': _('Success'), 'message': self.msgs['update_pass_success']},
                                 status=status.HTTP_200_OK)
@@ -212,7 +209,7 @@ class UpdatePasswordView(views.APIView):
                         return Response({'status': _('Bad request'), 'message': self.errs['server_error']},
                                         status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    logger.error(self.errs['user_inactive'].format(request.user.email))
+                    logger.error(self.errs['user_inactive'].format(request.user.log_guid))
                     return Response({'status': _('Unauthorized'), 'message': self.msgs['cannot_update_pass']},
                                     status=status.HTTP_401_UNAUTHORIZED)
             else:
@@ -225,6 +222,7 @@ class UpdatePasswordView(views.APIView):
             return Response({'status': 'Bad request', 'message': self.errs['password_mismatch'],
                              'errors': 'Validation error'},
                             status=status.HTTP_400_BAD_REQUEST)
+
 
 class ForgotPasswordView(views.APIView):
     """
@@ -252,13 +250,11 @@ class ForgotPasswordView(views.APIView):
         'cannot_update_pass': _('You cannot update the password on this account.'),
     }
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = json.loads(request.body)
         receiver_email = data.get('email', None)
-        logger.info("ForgotPasswordView.post is called. User: {0}".format(receiver_email))
         try:
             account = User.objects.get(email=receiver_email)
-            # logger.debug(account)
         except ObjectDoesNotExist:
             logger.exception(self.errs['user_not_found'].format(receiver_email))
             return Response({
@@ -266,7 +262,7 @@ class ForgotPasswordView(views.APIView):
                 'message': self.msgs['success'].format(receiver_email)
             }, status=status.HTTP_200_OK)
         if account is not None and receiver_email:
-            data['guid'] = hashlib.sha1(str(random.random())).hexdigest()
+            data['guid'] = hashlib.sha512(str(SystemRandom().getrandbits(512))).hexdigest()
             data['user'] = account.id
             date = datetime.datetime.utcnow()
             data['expiration_date'] = date + datetime.timedelta(days=settings.FORGOT_PASSWORD_GUID_EXPIRATION)
@@ -287,7 +283,7 @@ class ForgotPasswordView(views.APIView):
                         personalized_email = string.replace(str_with_username, '[link]', absolute_url)
                         email = EmailMessage('Forgot Password Email', personalized_email, to=[receiver_email])
                         email.send()
-                        logger.info(self.msgs['finish_success'].format(receiver_email))
+                        logger.info(self.msgs['finish_success'].format(account.log_guid))
                         return Response({
                             'status': _('Success'),
                             'message': self.msgs['success'].format(receiver_email)
@@ -299,23 +295,24 @@ class ForgotPasswordView(views.APIView):
                             'message': self.errs['server_error']
                         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 else:
-                    logger.error(self.errs['UID_invalid'].format(receiver_email, data['guid'], date))
+                    logger.error(self.errs['UID_invalid'].format(account.log_guid, data['guid'], date))
                     return Response({
                         'status': _('Bad request'),
                         'message': self.errs['server_error']
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
-                logger.exception(self.errs['exception'].format(receiver_email, e.message))
+                logger.exception(self.errs['exception'].format(account.log_guid, e.message))
                 return Response({
                     'status': _('Bad request'),
                     'message': self.errs['server_error']
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            logger.error(self.errs['user_not_found'].format(receiver_email))
+            logger.error(self.errs['user_not_found'].format(account.log_guid))
             return Response({
                 'status': _('Bad request'),
                 'message': self.errs['user_not_found'].format(receiver_email)
             }, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SetPasswordView(views.APIView):
     """
@@ -345,7 +342,7 @@ class SetPasswordView(views.APIView):
         'cannot_update_pass': _('You cannot update the password on this account.'),
     }
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = json.loads(request.body)
         guid = data.get('guid', None)
         logger.info("SetPasswordView.post is called. GUID: {0}".format(guid))
@@ -386,11 +383,12 @@ class SetPasswordView(views.APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if account is not None:
-            se_data = dict();
+            se_data = dict()
             se_data['password'] = password_serializer.validated_data['new_password']
             se_data['confirm_password'] = password_serializer.validated_data['confirm_password']
             se_data['email'] = account.email
             se_data['username'] = account.username
+            se_data['log_guid'] = account.log_guid
             try:
                 with transaction.atomic():
                     serializer = UserSerializer(account, data=se_data)
@@ -435,6 +433,7 @@ class SetPasswordView(views.APIView):
                 'message': self.msgs['activation_invalid']
             }, status=status.HTTP_400_BAD_REQUEST)
 
+
 class DeactivateView(views.APIView):
 
     errs = {
@@ -448,20 +447,20 @@ class DeactivateView(views.APIView):
         'delete_success': _('Successfully deleted the account.')
     }
 
-    def post(self, request, format=None):
+    def post(self, request):
         if request.user.is_authenticated():
-            logger.info("DeactivateView.post is called. User: {0} ".format(request.user.email))
+            logger.info("DeactivateView.post is called. User: {0} ".format(request.user.log_guid))
             data = json.loads(request.body)
             password = data.get('password', None)
             account = authenticate(email=request.user.email, password=password)
             if account is not None:
                 account.delete()
-                logger.info(self.msgs['deactivate_success'].format(request.user.email))
+                logger.info(self.msgs['deactivate_success'].format(request.user.log_guid))
                 return Response({
                     'status': _('Success'),
                     'message': self.msgs['delete_success']
                 }, status=status.HTTP_200_OK)
-            logger.error(self.errs['deactivation_fail'].format(request.user.email))
+            logger.error(self.errs['deactivation_fail'].format(request.user.log_guid))
             return Response({
                 'status': _('Bad request'),
                 'message': self.errs['pass_not_valid']

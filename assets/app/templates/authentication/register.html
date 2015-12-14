@@ -1,80 +1,65 @@
 <div class="container">
     <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <h1 translate="REGISTER"></h1>
-        <!-- here we use view model instead of scope
-        Also in the form we use novalidate which tell the browser to disable html5
-        And validation is done by angularJS
-        the form name does not take any underline
-        -->
+      <div class="col-md-4 col-md-offset-4">
+        <md-toolbar>
+            <h3 style="text-align:center;" translate="REGISTER"></h3>
+        </md-toolbar>
         <div class="well">
           <form role="form" novalidate name="registrationForm" ng-submit="vm.register()" id="register-form">
             <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[registrationForm.userEmail.$invalid && registrationForm.userEmail.$dirty]">
-              <label for="register__email" translate="EMAIL"></label>
-              <input class="form-control" id="register__email" ng-model="vm.email" name="userEmail"
-                     placeholder="mail@example.com"  type="email" valid-email dir="ltr" required/>
-                <span ng-show="registrationForm.userEmail.$valid" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-check-square-o"></i>
-                </span>
-                <span ng-show="registrationForm.userEmail.$invalid && registrationForm.userEmail.$dirty" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-warning"></i>
-                </span>
-
-                <div class="text-warning" ng-show="registrationForm.userEmail.$invalid && registrationForm.userEmail.$dirty">
-                        {{vm.getError(registrationForm.userEmail.$error)}}
-                </div>
+                <md-input-container>
+                  <label translate="EMAIL"></label>
+                  <input class="form-control" id="register__email" name="userEmail" ng-model="vm.email" type="email" valid-email dir="ltr" required/>
+                  <div ng-messages="registrationForm.userEmail.$error">
+                    <div class="text-warning" ng-show="registrationForm.userEmail.$invalid && registrationForm.userEmail.$dirty">
+                            {{vm.getError(registrationForm.userEmail.$error)}}
+                    </div>
+                  </div>
+                </md-input-container>
             </div> <!--userEmail-->
 
             <div class="form-group has-feedback" ng-class="{true: 'has-error', false:'has-success'}[registrationForm.userUsername.$invalid && registrationForm.userUsername.$dirty]">
-              <label for="register__username" translate="USERNAME"></label>
-              <input type="text" class="form-control" id="register__username" ng-model="vm.username" name="userUsername"
-                     placeholder="{{ 'USERNAME' | translate }}" ng-minlength="5" ng-maxlength="10" dir="ltr" required/>
-                <span ng-show="registrationForm.userUsername.$valid" class="form-control-feedback" aria-hidden="true">
-                    <i class="fa fa-check-square-o"></i>
-                </span>
-                <span ng-show="registrationForm.userUsername.$invalid && registrationForm.userUsername.$dirty" class="form-control-feedback" aria-hidden="true">
-                    <i class="fa fa-warning"></i>
-                </span>
-
-                <div class="text-warning" ng-show="registrationForm.userUsername.$invalid && registrationForm.userUsername.$dirty">
-                         {{vm.getError(registrationForm.userUsername.$error, 5, 10)}}
-                </div>
+                <md-input-container>
+                  <label translate="USERNAME"></label>
+                  <input type="text" class="form-control" id="register__username" name="userUsername" ng-model="vm.username" valid-alpha-numeric ng-minlength="5" ng-maxlength="10" dir="ltr" required/>
+                  <div ng-messages="registrationForm.userUsername.$error">
+                    <div class="text-warning" ng-show="registrationForm.userUsername.$invalid && registrationForm.userUsername.$dirty">
+                             {{vm.getError(registrationForm.userUsername.$error, 5, 10)}}
+                    </div>
+                  </div>
+                </md-input-container>
             </div> <!--userUsername-->
 
             <div class="form-group has-feedback" ng-class="{true: 'has-error', false:'has-success'}[registrationForm.userPassword.$invalid && registrationForm.userPassword.$dirty]">
-              <label for="register__password" translate="PASSWORD"></label>
-              <input type="password" class="form-control" id="register__password" ng-model="vm.password" name="userPassword"
-                     placeholder="{{ 'PASSWORD' | translate }}" ng-minlength="8" ng-maxlength="24" ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/"  required/>
-               <span ng-show="registrationForm.userPassword.$valid" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-check-square-o"></i>
-                </span>
-                <span ng-show="registrationForm.userPassword.$invalid && registrationForm.userPassword.$dirty" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-warning"></i>
-                </span>
-                <div class="text-warning" ng-show="registrationForm.userPassword.$invalid && registrationForm.userPassword.$dirty">
-                         {{vm.getError(registrationForm.userPassword.$error, 8, 24)}}
-                </div>
+                <md-input-container>
+                  <label translate="PASSWORD"></label>
+                  <input type="password" class="form-control" id="register__password" name="userPassword" ng-model="vm.password" ng-minlength="8" ng-maxlength="24"
+                         ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/" required/>
+                  <div ng-messages="registrationForm.userPassword.$error">
+                    <div class="text-warning" ng-show="registrationForm.userPassword.$invalid && registrationForm.userPassword.$dirty">
+                             {{vm.getError(registrationForm.userPassword.$error, 8, 24)}}
+                    </div>
+                  </div>
+                </md-input-container>
             </div> <!--userPassword-->
 
             <div class="form-group has-feedback" ng-class="{true: 'has-error', false:'has-success'}[registrationForm.confirmPassword.$invalid && registrationForm.confirmPassword.$dirty]">
-              <label for="register__confirm_password" translate="CONFRMPASSWORD"></label>
-              <input type="password" class="form-control" id="register__confirm_password" ng-model="vm.confirm_password" name="confirmPassword"
-                     placeholder="{{ 'CONFRMPASSWORD' | translate }}" ng-minlength="8" ng-maxlength="24" ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/" pw-check="register__password"  dir="ltr" required/>
-                <span ng-show="registrationForm.confirmPassword.$valid" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-check-square-o"></i>
-                </span>
-                <span ng-show="registrationForm.confirmPassword.$invalid && registrationForm.confirmPassword.$dirty" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-warning"></i>
-                </span>
-                <div class="text-warning" ng-show="registrationForm.confirmPassword.$invalid && registrationForm.confirmPassword.$dirty">
-                         {{vm.getError(registrationForm.confirmPassword.$error, 8, 24)}}
-                </div>
+                <md-input-container>
+                  <label translate="CONFRMPASSWORD"></label>
+                  <input type="password" class="form-control" id="register__confirm_password" name="confirmPassword" ng-model="vm.confirm_password"
+                         ng-minlength="8" ng-maxlength="24" ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/" pw-check="register__password"  dir="ltr" required/>
+                  <div ng-messages="registrationForm.confirmPassword.$error">
+                    <div class="text-warning" ng-show="registrationForm.confirmPassword.$invalid && registrationForm.confirmPassword.$dirty">
+                             {{vm.getError(registrationForm.confirmPassword.$error, 8, 24)}}
+                    </div>
+                  </div>
+                </md-input-container>
             </div> <!--userPassword-->
 
             <div class="form-group">
-              <button type="submit" class="btn btn-primary btn-block" ng-disabled="registrationForm.$invalid">
+              <md-button type="submit" class="md-raised md-primary btn-block" aria-label="..." style="margin:0px 0px;" ng-disabled="registrationForm.$invalid">
                   <span translate="REGISTER"></span>
-              </button>
+              </md-button>
             </div>
 
           </form>

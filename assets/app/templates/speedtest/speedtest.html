@@ -1,34 +1,113 @@
-<div class="row" style="width:1000px;">
-	<div class="col-md-5">
-		<div id="svg"></div>
-		<div class="center-block" style="width: 200px;">
-			<a class="btn btn-lg btn-block btn-success" ng-disabled="vm.testInProgress" ng-click="vm.startTest()">{{ vm.testButtonLabel }}</a>
-		</div>
-        <br>
-		<!--<div class="center-block" style="width: 200px;">
-			<a class="btn btn-lg btn-block btn-success" ng-click="vm.open()">Submit report</a>
-		</div>-->
+<div class="row" style="background-color: #f7f7f7">
+    <div class="row">
+        <div class="col-lg-2 col-lg-offset-1" ng-controller="ReportController as vm" ng-submit="vm.submit()" style="padding: 3px; margin-top: 40px;">
+        <div class="well" style="border-width: 1px; border-color: lightblue">
+            <form role="form" novalidate name="reportForm" ng-submit="vm.sendReport()">
+                   <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[reportForm.isp.$invalid && reportForm.isp.$dirty]">
+                        <md-input-container flex>
+                            <label translate="ISP"></label>
+                            <input type="text" class="form-control" id="report__ISP" ng-model="vm.ISP"/>
+                            <span ng-show="reportForm.isp.$valid" class="form-control-feedback" aria-hidden="true">
+                                 <i class="fa fa-check-square-o"></i>
+                            </span>
+                            <span ng-show="reportForm.isp.$invalid && reportForm.isp.$dirty" class="form-control-feedback" aria-hidden="true">
+                                 <i class="fa fa-warning"></i>
+                            </span>
+                            <div class="text-warning" ng-show="reportForm.isp.$invalid && reportForm.isp.$dirty">
+                                    {{vm.getError(reportForm.isp.$error)}}
+                            </div>
+                         </md-input-container>
+                    </div>
+                    <md-select placeholder="SERVICE TYPE" id="service_type" ng-model="vm.serviceType">
+                        <md-option value="" disabled selected translate="SERVICE_TYPE"></md-option>
+                        <md-option value="HOME" translate="HOME"></md-option>
+                        <md-option value="BUSINESS" translate="BUSINESS"></md-option>
+                        <md-option value="PUBLIC" translate="PUBLIC"></md-option>
+                    </md-select>
+                    <md-select placeholder="Nominal Download Speed" id="isp_download_speed" ng-model="vm.nominal_download_rate">
+                        <md-option value="" disabled selected translate="NOMINAL_DOWNLOAD_SPEED"></md-option>
+                        <md-option value="64" translate="64k"></md-option>
+                        <md-option value="128" translate="128k"></md-option>
+                        <md-option value="512" translate="512k"></md-option>
+                        <md-option value="1" translate="1M"></md-option>
+                        <md-option value="2" translate="2M"></md-option>
+                        <md-option value="3" translate="3-5M"></md-option>
+                        <md-option value="6" translate="6-9M"></md-option>
+                        <md-option value="10" translate="10M"></md-option>
+                    </md-select>
+                    <md-select placeholder="Nominal Upload Speed" id="isp_upload_speed" ng-model="vm.nominal_upload_rate">
+                        <md-option value="" disabled selected translate="NOMINAL_UPLOAD_SPEED"></md-option>
+                        <md-option value="32" translate="32k"></md-option>
+                        <md-option value="64" translate="64k"></md-option>
+                        <md-option value="128" translate="128k"></md-option>
+                        <md-option value="512" translate="512k"></md-option>
+                        <md-option value="1" translate="1M"></md-option>
+                        <md-option value="2" translate="2M"></md-option>
+                        <md-option value="3" translate="3-5M"></md-option>
+                        <md-option value="6" translate="6-9M"></md-option>
+                        <md-option value="10" translate="10M"></md-option>
+                    </md-select>
+                    <div>
+                        <label translate="OVERALSATISFACTION" style="font-weight:normal;"></label>
+                        <rating class="pull-right" ng-model="vm.rate_overall" max="vm.ratingMax" on-hover="vm.hoveringOver(value, overall)" on-leave="overStar = null"></rating>
+                    </div>
+                    <hr>
+                    <div>
+                        <label translate="CUSTOMERSERVICE" style="font-weight:normal;"></label>
+                        <rating class="pull-right" ng-model="vm.rate_customerService" max="vm.ratingMax" on-hover="hoveringOver(value, customerService)" on-leave="overStar = null"></rating>
+                    </div>
+                    <hr>
+                    <div>
+                        <md-switch style="margin: 0px;" ng-model="vm.promotion">
+                            <span translate="PROMOTION"></span>
+                        </md-switch>
+                    </div>
+                    <hr>
+                    <md-switch  style="margin: 0px;" ng-model="vm.vpn">
+                      <span translate="VPN"></span>
+                    </md-switch>
+                    <div class="form-group">
+                        <md-input-container flex>
+                            <label translate="PRICE"></label>
+                            <input type="text" class="form-control" id="report_price" ng-model="vm.price"/>
+                        </md-input-container>
+                    </div>
+                    <div class="form-group" style="text-align:center;">
+                        <md-button type="submit" class="md-raised md-primary btn-block" style="margin:0px 0px;">
+                            <span translate="SUBMIT"></span>
+                        </md-button>
+                    </div>
+            </form>
+        </div>
     </div>
-    <div class="col-lg-7">
-		<p class="bg-primary" style="margin-top:60px;"><strong style="color:pink; margin-left: 5px;">Status: </strong>{{ vm.status }}</p>
-		<table class="table table-hover" style="">
-		    <tr class="success">
-		    	<td><strong>Servername</strong></td>
-		    	<td><strong>Download Speed</strong></td>
-		    	<td><strong>Upload Speed</strong></td>
-		  	</tr>
-		  	<tr ng-repeat='server in vm.serverList'>
-		  		<td>{{ server.name }}</td>
-		  		<td class="center-block" ng-bind-html="server.downloadSpeed"></td>
-		  		<td ng-bind-html="server.uploadSpeed"></td>
-		  	</tr>
-		  	<tr class="info" ng-show="vm.showAverage">
-		  		<td><strong>Average </strong></td>
-		  		<td ng-bind-html="vm.downloadAverage"></td>
-		  		<td ng-bind-html="vm.uploadAverage"></td>
-		  	</tr>
-		</table>
+        <div class="col-lg-4">
+            <div id="svg"></div>
+            <div class="text-center">
+                <a class="btn btn-lg btn-success" ng-disabled="vm.testInProgress" ng-click="vm.startTest()" aria-label="Submit">{{ vm.testButtonLabel }}</a>
+            </div>
+        </div> <!-- End of status bar -->
+        <div class="col-lg-3">
+            <p class="bg-primary" style="margin-top: 60px;"><strong style="color:pink; margin-left: 5px;">Status: </strong>{{ vm.status }}</p>
+            <table class="table table-hover">
+                <tr class="success">
+                    <td><strong>Server name</strong></td>
+                    <td><strong>Latency</strong></td>
+                    <td><strong>Download Speed</strong></td>
+                    <td><strong>Upload Speed</strong></td>
+                </tr>
+                <tr ng-repeat='server in vm.serverList'>
+                    <td>{{ server.name }}</td>
+                    <td ng-bind-html="server.latency"></td>
+                    <td class="center-block" ng-bind-html="server.downloadSpeed"></td>
+                    <td ng-bind-html="server.uploadSpeed"></td>
+                </tr>
+                <tr class="info" ng-show="vm.showAverage">
+                    <td><strong>Average </strong></td>
+                    <td ng-bind-html="vm.latencyAverage"></td>
+                    <td ng-bind-html="vm.downloadAverage"></td>
+                    <td ng-bind-html="vm.uploadAverage"></td>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
-
-
+</div> <!-- End of Row -->

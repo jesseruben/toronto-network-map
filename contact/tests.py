@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ContactModelTests(TestCase):
     def setUp(self):
         self.contact = Contact.objects.create(email='sth@sth.com', subject='hello', message='some message')
@@ -16,12 +17,12 @@ class ContactModelTests(TestCase):
     def tearDown(self):
         self.contact.delete()
 
-
     def test_contact_model_create(self):
         contact = Contact.objects.get(email='sth@sth.com')
         self.assertEqual(contact.email, 'sth@sth.com')
         self.assertEqual(contact.subject, 'hello')
         self.assertEqual(contact.message, 'some message')
+
 
 class ContactViewTests(APITestCase):
     def setUp(self):

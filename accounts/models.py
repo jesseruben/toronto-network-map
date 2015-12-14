@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+import hashlib
+from random import SystemRandom
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -31,6 +33,11 @@ class UserManager(BaseUserManager):
         return user
 
 
+def _create_hash():
+    rand = SystemRandom()
+    return hashlib.sha512(str(rand.getrandbits(512))).hexdigest()
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Remember to add AUTH_USER_MODEL = 'accounts.User' and add accounts in installed app
@@ -44,7 +51,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Last time user got update'))
     notifications = models.IntegerField(default=0, verbose_name=_('Number of new notifications'))
     objects = UserManager()
-    # User.objects.get(**kwargs)  objects is the built-in manager when we don't define it
+    log_guid = models.CharField(max_length=100, unique=True, default=_create_hash,
+                                verbose_name=_('Globally Unique Identifier (GUID) for logging purposes'))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

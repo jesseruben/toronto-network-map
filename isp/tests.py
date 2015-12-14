@@ -10,16 +10,18 @@ import logging
 # getting an instance of the logger
 logger = logging.getLogger(__name__)
 
+
 def approx_equal(a, b, tol):
     return abs(a - b) < tol
 
+
 class ISPModelTests(TestCase):
     def setUp(self):
-        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=6476078460, support_phone=1800,
+        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=6476078000, support_phone=1800,
                                        rating=1.5, facebook='rogers.facebook.com', twitter='rogers.twitter.com',
                                        support_link='support.rogers.com')
         self.isp1.save()
-        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=9052342345, support_phone=2100,
+        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=9052342000, support_phone=2100,
                                        rating=0.5, facebook='bell.facebook.com', twitter='bell.twitter.com',
                                        support_link='support.bell.com')
         self.isp2.save()
@@ -43,7 +45,7 @@ class ISPModelTests(TestCase):
     def test_isp_model_create(self):
         isp = ISP.objects.get(name='rogers')
         self.assertEqual(isp.website, 'rogers.ca')
-        self.assertEqual(isp.phone, 6476078460)
+        self.assertEqual(isp.phone, 6476078000)
         self.assertEqual(isp.support_phone, 1800)
         self.assertTrue(approx_equal(1.5, isp.rating, 0.01), True)
         self.assertEqual(isp.facebook, 'rogers.facebook.com')
@@ -75,11 +77,11 @@ class ISPModelTests(TestCase):
 
 class ISPViewTests(APITestCase):
     def setUp(self):
-        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=6476078460, support_phone=1800,
+        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=6476078000, support_phone=1800,
                                        rating=1.5, facebook='rogers.facebook.com', twitter='rogers.twitter.com',
                                        support_link='support.rogers.com')
         self.isp1.save()
-        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=9052342345, support_phone=2100,
+        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=9052342000, support_phone=2100,
                                        rating=0.5, facebook='bell.facebook.com', twitter='bell.twitter.com',
                                        support_link='support.bell.com')
         self.isp2.save()

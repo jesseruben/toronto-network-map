@@ -23,7 +23,7 @@
     var Report = {
        // This is personal preference, but I find it's more readable to define your service
        // as a named object and then return it, we expose this utilises by this method as a part of our service
-      register: register
+      submit: submit
     };
 
     return Report;
@@ -35,11 +35,8 @@
     * @returns {Promise}
     * @memberOf ndtApp.report.services.Report
     */
-    function register(data) {
+    function submit(data) {
       return $http.post('/ndt/profile/', {
-          country: data.country,
-          province : data.province,
-          city : data.city,
           ISP: data.ISP,
           service_type: data.serviceType,
           name: 'Anonymous',  // TODO: get this name from a logged in user in future
@@ -47,9 +44,6 @@
           nominal_upload_rate: data.nominal_upload_rate,
           general_rating: data.rate_overall,
           customer_rating: data.rate_customerService,
-          firewall: data.firewall,
-          bandwidth: data.bandwidth,
-          comment: data.comment,
           promotion: data.promotion,
           price: data.price,
           vpn: data.vpn

@@ -19,6 +19,9 @@
     vm.login = login;
     vm.getError = getError;
     vm.logout = logout;
+    vm.model = {
+    name: "controllerAs vm test"
+    };
 
     activate();
 
@@ -64,7 +67,7 @@
           } else if (error.email){
               return $filter('translate')('ERROR_EMAIL');
           }
-      } else return;
+      }
     }
 
   }

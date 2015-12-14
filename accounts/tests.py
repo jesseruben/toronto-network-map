@@ -173,6 +173,7 @@ class UpdatePasswordViewTests(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
+
 class ForgotPasswordViewTests(APITestCase):
     def setUp(self):
         """
@@ -274,6 +275,7 @@ class SetPasswordViewTests(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
+
 class DeactivateViewTests(APITestCase):
     def setUp(self):
         self.user = User(email='name1@test.com', username='name1')
@@ -305,6 +307,7 @@ class DeactivateViewTests(APITestCase):
         expected_response = u'User is not authorized to perform this action.'
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
+
 
 class UserViewTests(APITestCase):
     """
@@ -348,7 +351,7 @@ class UserViewTests(APITestCase):
         """
         with transaction.atomic():
             response = self.client.post(self.url, self.duplicate_data, format='json')
-            expected_response = u'UNIQUE constraint failed: accounts_user.email'
+            expected_response = u'User info is invalid.'
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(json.loads(response.content)['message'], expected_response)
 

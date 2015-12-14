@@ -1,30 +1,36 @@
 {% load compress %}
 {% load staticfiles %}
-
 {% compress js %}
 
+    <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
-    <script src="{% static 'bower_components/angular/angular.js' %}"></script>
-    <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/jquery-ui/ui/minified/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular/angular.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
     <script type="text/javascript" src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js' %}"></script>
-    <script src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
-    <script src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
-    <script src="{% static 'bower_components/angular-translate/angular-translate.js' %}"></script>
-    <script src="{% static 'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js' %}"></script>
-    <script src="{% static 'bower_components/angular-messages/angular-messages.js' %}"></script>
-    <script src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
-    <script src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
-    <script src="{% static 'bower_components/angular-sanitize/angular-sanitize.js' %}"></script>
-    <script src="{% static 'bower_components/angular-touch/angular-touch.js' %}"></script>
-    <script src="{% static 'bower_components/angular-notify/dist/angular-notify.js' %}"></script>
-    <script src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js' %}"></script>
-    <script src="{% static 'bower_components/sprintf/dist/sprintf.min.js' %}"></script>
-    <script src="{% static 'bower_components/moment/moment.js' %}"></script>
-    <script src="{% static 'bower_components/angular-logger/dist/angular-logger.js' %}"></script>
-    <script src="{% static 'bower_components/d3/d3.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-translate/angular-translate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-messages/angular-messages.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-sanitize/angular-sanitize.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-touch/angular-touch.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-notify/dist/angular-notify.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/sprintf/dist/sprintf.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/moment/moment.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-logger/dist/angular-logger.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/d3/d3.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-simple-logger/dist/angular-simple-logger.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/lodash/lodash.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-google-maps/dist/angular-google-maps.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-material/angular-material.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-aria/angular-aria.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/angular-ui-slider/src/slider.js' %}"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -49,6 +55,12 @@
     <script type="text/javascript" src="{% static 'js/reports/controllers/reports.controller.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/reports/services/reports.service.js' %}"></script>
 
+    <script type="text/javascript" src="{% static 'js/ndt/ndt.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndt/filters/isp.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndt/controllers/map.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndt/services/ndt.service.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ndt/services/geolocation.service.js' %}"></script>
+
     <script type="text/javascript" src="{% static 'js/authentication/authentication.module.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/authentication/directives/authentication.directive.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/authentication/services/authentication.service.js' %}"></script>
@@ -59,8 +71,8 @@
     <script type="text/javascript" src="{% static 'js/authentication/controllers/setpassword.controller.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/authentication/controllers/deactivationmodal.controller.js' %}"></script>
 
-    <!-- endbuild -->
 
+    <!-- endbuild -->
 
 
 {% endcompress %}

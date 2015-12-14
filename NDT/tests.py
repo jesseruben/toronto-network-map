@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from .models import NDT, NDTProfile, Server, Web100
 import json
 from django.core.urlresolvers import reverse
@@ -6,11 +6,11 @@ from django.db import transaction
 from locations.models import Country
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-from copy import deepcopy
 from accounts.models import User
 from isp.models import ISP
 import datetime
 import logging
+import time
 
 # getting an instance of the logger
 logger = logging.getLogger(__name__)
@@ -116,6 +116,7 @@ class NDTModelTests(TestCase):
         isp.save()
         ndt_profile = NDTProfile.objects.get(isp=self.isp)
         self.assertEqual(isp.name, ndt_profile.isp.name)
+
 
 class NDTViewTests(APITestCase):
     def setUp(self):
@@ -396,6 +397,7 @@ class NDTViewTests(APITestCase):
         response = self.client.get(self.ndt_profile_url+'?name=name')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 class ServerViewTests(APITestCase):
     def setUp(self):
         self.country1 = Country.objects.create(name=u'Canada')
@@ -441,7 +443,9 @@ class Web100ViewTests(APITestCase):
 
     def test_web100_viewset_post_create(self):
         allNDT = NDT.objects.all()
-        response = self.client.post(self.web100_url_create, {'hash': '', 'blob': '{"blob_json": "create_new"}', 'upload_rate': 12, 'download_rate': 23})
+        response = self.client.post(self.web100_url_create, {'hash': '',
+                                                             'blob': '{"blob_json": "create_new"}',
+                                                             'upload_rate': 12, 'download_rate': 23})
         self.assertIsNotNone(response.data['hash'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         web100 = Web100.objects.get(pk=2)
@@ -450,17 +454,23 @@ class Web100ViewTests(APITestCase):
         self.assertEqual(web100.blob, '{"blob_json": "create_new"}')
 
     def test_web100_viewset_multi_create(self):
-        response = self.client.post(self.web100_url_create, {'hash': '', 'blob': '{"blob_json": "create_new"}', 'upload_rate': 10, 'download_rate': 23})
+        response = self.client.post(self.web100_url_create, {'hash': '',
+                                                             'blob': '{"blob_json": "create_new"}',
+                                                             'upload_rate': 10, 'download_rate': 23})
         self.assertIsNotNone(response.data['hash'])
         web1 = Web100.objects.get(pk=2)
         self.assertEquals(web1.ndt.id, 2)
-        response = self.client.post(self.web100_url_create, {'hash': response.data['hash'], 'blob': '{"blob_json": "create_new"}', 'upload_rate': 11, 'download_rate': 24})
+        response = self.client.post(self.web100_url_create, {'hash': response.data['hash'],
+                                                             'blob': '{"blob_json": "create_new"}',
+                                                             'upload_rate': 11, 'download_rate': 24})
         self.assertIsNotNone(response.data['hash'])
         web2 = Web100.objects.get(pk=3)
         self.assertEquals(web2.ndt.id, 2)
-        response = self.client.post(self.web100_url_create, {'hash': response.data['hash'], 'blob': '{"blob_json": "create_new"}', 'upload_rate': 12, 'download_rate': 25})
+        response = self.client.post(self.web100_url_create, {'hash': response.data['hash'],
+                                                             'blob': '{"blob_json": "create_new"}',
+                                                             'upload_rate': 12, 'download_rate': 25})
         self.assertIsNotNone(response.data['hash'])
-        ndt_object = NDT.objects.get(hash = response.data['hash'])
+        ndt_object = NDT.objects.get(hash=response.data['hash'])
         web3 = Web100.objects.get(pk=4)
         self.assertEquals(web3.ndt.id, 2)
         self.assertEquals(ndt_object.average_index, 3)

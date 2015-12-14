@@ -1,22 +1,29 @@
 from rest_framework import serializers
 from accounts.models import User
 from accounts.models import UserUID
-from django.core.validators import RegexValidator
 import logging
 import re
 
 logger = logging.getLogger(__name__)
 
+
 def password_validator(value):
     regex = '^(?=.*[a-z])(?=.*[A-Z]){8,}(?=.*\d).+$'
+    if len(value) < 8 or len(value) > 24 or not re.match(regex, value):
+            raise serializers.ValidationError('This field should at least contain one small letter, '
+                                              'one capital letter, one digit and minimum length of 8')
+
+
+def username_validator(value):
+    regex = '^[a-zA-Z0-9_]*$'
     if not re.match(regex, value):
-        raise serializers.ValidationError('This field should at least contain one small letter, '
-                                          'one capital letter, one digit and minimum length of 8')
+        raise serializers.ValidationError('This field should only contain characters and numbers.')
+
 
 class UserSerializer(serializers.ModelSerializer):
     # these are added here to impose required False and the hash password cannot be queried by get
     email = serializers.EmailField(required=True, max_length=255)
-    username = serializers.CharField(required=True, max_length=40)
+    username = serializers.CharField(required=True, max_length=10, min_length=5, validators=[username_validator])
     password = serializers.CharField(write_only=True, required=True, validators=[password_validator])
     confirm_password = serializers.CharField(write_only=True, allow_null=True, allow_blank=True)
 
@@ -25,8 +32,8 @@ class UserSerializer(serializers.ModelSerializer):
         # each field in the fields t uple is required, and some fields shouldn't be available
         # to the user due to security reason , i.e. is_active
         fields = ('email', 'username', 'created_at', 'updated_at',
-                  'password', 'confirm_password')
-        read_only_fields = ('created_at', 'updated_at')
+                  'password', 'confirm_password', 'log_guid')
+        read_only_fields = ('created_at', 'updated_at', 'log_guid')
 
     def create(self, validated_data):
         """
@@ -56,6 +63,7 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Password and confirm password do not match')
         return attrs
 
+
 # This serializer is used in the updatepasswordview and setpasswordview to check that newpass and confrmpass are same
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required=True)
@@ -74,6 +82,7 @@ class PasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError('New Password and Confirm Password do not match.')
         else:
             return attrs
+
 
 class UserUIDSerializer(serializers.ModelSerializer):
     guid = serializers.CharField(write_only=True, required=True)

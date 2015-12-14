@@ -9,10 +9,9 @@
       'ndtApp.authentication.services',
       'ndtApp.authentication.directives'
     ]);
-//this one define the controllers only
+
   angular
     .module('ndtApp.authentication.controllers', []);
-//this one defines the services only
 
   angular
     .module('ndtApp.authentication.services', ['ngCookies']);

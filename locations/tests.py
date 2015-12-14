@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals
 from django.test import TestCase
-from .models import Country, City, Region
-from rest_framework import status
-from django.core.urlresolvers import reverse
+from .models import Country
+
 
 class SaveTestCase(TestCase):
     def testCountryAsciiAndSlug(self):

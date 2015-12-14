@@ -444,7 +444,7 @@ body {
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   .container {
-    max-width: 730px;
+    /*max-width: 730px;*/
   }
 
   /* Remove the padding we set earlier */
@@ -550,5 +550,43 @@ body {
   border-style:solid;
   border-width:2.5px;
   padding:10px 10px 10px 10px;
+}
+
+.angular-google-map-container {
+}
+.ui-slider{
+  margin-left: 15px;
+}
+.glyphicon-star {
+  color: darkblue;
+}
+
+.well {
+  background-color: white;
+}
+
+md-input-container label {
+  color: black;
+  font-weight: normal;
+}
+
+md-input-container input {
+  border-color: gray;
+}
+
+.has-success .form-control {
+  border-color: gray;
+}
+
+md-toolbar:not(.md-menu-toolbar) {
+  background-color: #336699;
+}
+
+.md-button.md-primary.md-raised:enabled {
+  background-color: #336699;
+}
+
+.rating {
+  display: inline-block;
 }
 

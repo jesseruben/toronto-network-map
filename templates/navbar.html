@@ -9,32 +9,35 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="/">
-        <img style="max-width:120px; max-height: 50px; margin-left: 0; padding-left: 3px; padding-right: 3px;"
-            src="{% static 'images/logo.png' %}">
+        <img style="max-width:170px; max-height: 80px; margin-left: 0; padding-left: 3px; padding-right: 3px;"
+            src="{% static 'images/logo-2.png' %}">
         </a>
       </div>
 
       <div class="collapse navbar-collapse" id="js-navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/contact"><p class="md-button" translate="CONTACT"></p></a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/about"><p class="md-button" translate="ABOUTUS"></p></a></li>
+        </ul>
         {% if  user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
-                <li ng-controller="LoginController as vm"><a href="/settings/{{ user.username }}"><p class="navbar-button" style="color:#3edcd9;">{{ user.username }}</p></a></li>
+                <li ng-controller="LoginController as vm"><a href="/settings/{{ user.username }}"><p class="md-button">{{ user.username }}</p></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li ng-controller="LoginController as vm"><a href="javascript:void(0)" ng-click="vm.logout()"><p class="navbar-button" style="color:#2378c8;" translate="LOGOUT"></p></a></li>
+                <li ng-controller="LoginController as vm"><a href="javascript:void(0)" ng-click="vm.logout()"><p class="md-button" translate="LOGOUT"></p></a></li>
             </ul>
         {% else %}
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/login"><p class="navbar-button" style="color:#3edcd9;" translate="LOGIN"></p></a></li>
+                <li><a href="/login"><p class="md-button" translate="LOGIN"></p></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/register"><p class="navbar-button" style="color:#2378c8;" translate="REGISTER"></p></a></li>
+                <li><a href="/register"><p class="md-button" translate="REGISTER"></p></a></li>
             </ul>
         {% endif %}
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/about"><p class="navbar-button" style="color:#ff0040;" translate="ABOUTUS"></p></a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="/contact"><p class="navbar-button" style="color:#ad655f;" translate="CONTACT"></p></a></li>
+            <li><a href="/speedtest"><p class="md-button" translate="TEST_YOUR_SPEED"></p></a></li>
         </ul>
       </div>
     </div>

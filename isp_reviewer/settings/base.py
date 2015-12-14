@@ -100,6 +100,7 @@ LOCAL_APPS = (
     'cities_light',
     'locations',
     'contact',
+    'admin_ip_whitelist',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -119,9 +120,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_ip_whitelist.middleware.AdminAcceessIPWhiteListMiddleware'
 )
 ########## END MIDDLEWARE CONFIGURATION
 
+########## Whitelisitng the admin
+# Remember you have to restart the application everytime you change the ips in the db
+ADMIN_ACCEES_WHITELIST_ENABLED = True
 
 ########## URL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -183,5 +188,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
 }
 

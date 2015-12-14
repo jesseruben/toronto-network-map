@@ -10,13 +10,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.db import transaction
-import hashlib
 import datetime
-import random
 import logging
 
 # getting an instance of the logger
 logger = logging.getLogger(__name__)
+
 
 class NDTModelViewSet(viewsets.ModelViewSet):
     queryset = NDT.objects.all()
@@ -99,6 +98,7 @@ class NDTModelViewSet(viewsets.ModelViewSet):
         except Exception as e:
             logger.error('Exception thrown: {0}'.format(e))
             return Response({'status': _('Bad request'), 'message': e.message}, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Available functions - list, create, retrieve, update, destroy
 class NDTProfileModelViewSet(viewsets.ModelViewSet):
@@ -202,10 +202,12 @@ class NDTProfileModelViewSet(viewsets.ModelViewSet):
             logger.error('Exception thrown: {0}'.format(e))
             return Response({'status': _('Bad request'), 'message': e.message}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ServerViewSet(mixins.ListModelMixin,
                     viewsets.GenericViewSet):
     queryset = Server.objects.all()
     serializer_class = ServerSerializer
+
 
 class Web100ViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):

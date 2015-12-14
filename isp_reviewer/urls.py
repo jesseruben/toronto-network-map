@@ -9,7 +9,6 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^locations', include('locations.urls')),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^.*$', IndexView.as_view(), name='index')
 ] # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

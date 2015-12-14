@@ -75,7 +75,7 @@
               if (error.required){
                   return $filter('translate')('ERROR_REQUIRED');
               } else if (error.email){
-                  return $filter('translate')('ERROR_EMAIL');;
+                  return $filter('translate')('ERROR_EMAIL');
               } else if (error.minlength){
                   return $filter('translate')('ERROR_SHORT')+ min;
               } else if (error.maxlength){
@@ -84,8 +84,10 @@
                   return $filter('translate')('ERROR_PASSWORD_REGEX');
               } else if (error.pwmatch){
                   return $filter('translate')('ERROR_PASSWORD_MATCH');
+              } else if (error.alphanumeric){
+                  return $filter('translate')('ERROR_ALPHA_NUMERIC');
               }
-          } else return;
+          }
       }
   }
 })();

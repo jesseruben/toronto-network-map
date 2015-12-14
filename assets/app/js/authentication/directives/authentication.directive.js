@@ -4,6 +4,7 @@
     angular
         .module('ndtApp')
         .directive('pwCheck', pwCheck)
+        .directive('validAlphaNumeric', validAlphaNumeric)
         .directive('validEmail', validEmail);
 
     function pwCheck() {
@@ -19,7 +20,7 @@
                 });
             }
         }
-    };
+    }
 
     function validEmail() {
         return {
@@ -40,6 +41,26 @@
                  ctrl.$formatters = [validator];
              }
          }
-     };
+     }
+
+    function validAlphaNumeric() {
+        return {
+            require: 'ngModel',
+            restrict: 'A',
+            link: function(scope, elem, attr, ngModel) {
+                var validator = function(value) {
+                   if (/^[a-zA-Z0-9]*$/.test(value)) {
+                        ngModel.$setValidity('alphanumeric', true);
+                        return value;
+                   } else {
+                       ngModel.$setValidity('alphanumeric', false);
+                       return undefined;
+                   }
+                };
+                ngModel.$parsers.unshift(validator);
+                ngModel.$formatters.unshift(validator);
+            }
+        };
+    }
 
 })();

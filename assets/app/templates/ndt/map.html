@@ -1,0 +1,49 @@
+<div class="container-fluid" style="margin-top: -20px;">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="jumbotron" style="margin-top: 15px;">
+                <div class="row">
+                    <h3 style="text-decoration: underline;">Filtering measurment</h3>
+                    <br>
+                </div>
+                <div class="row">
+                    <h4>Upload rate <small>({{vm.uploadSlider[0]}} to {{ vm.uploadSlider[1]}} Mbps)</small></h4>
+                    <div class="col-lg-10 ui-slider"  ui-slider="{range: true}"  step="5"  min="0" max="20" ng-model="vm.uploadSlider"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <h4>Download rate <small>({{vm.downloadSlider[0]}} to {{ vm.downloadSlider[1]}} Mbps)</small></h4>
+                    <div class="col-lg-10 ui-slider" ui-slider="{range: true}"  step="5"  min="0" max="50" ng-model="vm.downloadSlider"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <h4>Price <small>(${{vm.priceSlider[0]}} to ${{ vm.priceSlider[1]}})</small></h4>
+                    <div  class="col-lg-10 ui-slider" ui-slider="{range: true}"  step="1"   min="0" max="100" ng-model="vm.priceSlider"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <md-select  multiple ng-model="vm.selectedIsps" placeholder="Filter multiple ISPs">
+                        <md-option ng-repeat="item in vm.ispFilterOptions.isps" value={{item}}>{{item.name}}</md-option>
+                    </md-select>
+                </div>
+            </div>
+            <div class="jumbotron">
+                <div class="row">
+                    <h3 style="text-decoration: underline;">Statistics</h3>
+                    <br>
+                </div>
+                <div class="row">
+                    <p>Total number of measurements <code>{{ vm.totalNumber }}</code></p>
+                    <p>Average download rate<code>{{ vm.averageDownload | number:1 }} Mbps</code></p>
+                    <p>Average upload rate <code>{{ vm.averageUpload | number:1 }} Mbps</code></p>
+                    <p>Average price <code>{{ vm.averagePrice | currency:"$":0}}</code></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9" style="padding: 0;">
+            <ui-gmap-google-map center="vm.map.center" zoom="vm.map.zoom" draggable="vm.map.options.draggable" options="vm.map.options" events="vm.map.events" control="googlemap">
+                <ui-gmap-markers models="vm.markers" idkey="vm.markers.id" coords="'self'" events="vm.markers.events"  icon= '{url:    "static/images/circle.png" }'></ui-gmap-markers>
+            </ui-gmap-google-map>
+        </div>
+    </div>
+</div>

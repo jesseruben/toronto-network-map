@@ -116,7 +116,7 @@ angular
     function reportPassedResultsErrorFn(data, status, headers, config) {
       return '';
     }
-  };
+  }
 
 /**
  * Provide feedback to the console or the DOM.
@@ -129,7 +129,7 @@ function logger(logMessage, debugging) {
   if (debugging === true) {
     console.log(logMessage);
   }
-};
+}
 
 /**
  * Check that the browser supports the NDT test.
@@ -140,7 +140,7 @@ function checkBrowserSupport() {
     throw this.UnsupportedBrowser('No Websockets');
   }
   return true;
-};
+}
 
 /**
  * Make an asynchronous AJAX request to M-Lab NS for the closest NDT service.
@@ -166,7 +166,7 @@ function findNdtServer() {
   };
   mlabNsRequest.open("GET", mlabNsUrl, false);
   mlabNsRequest.send();
-};
+}
 
 /**
  * Makes a login message suitable for sending to the server.  The login
@@ -191,7 +191,7 @@ function makeLoginMessage(desiredTests) {
     loginData[i] = loginMessage.charCodeAt(i);
   }
   return loginData;
-};
+}
 
 /**
  * A generic message creation system for NDT.
@@ -215,7 +215,7 @@ function makeNdtMessage(messageType, messageContent) {
     ndtMessage[i + 3] = messageBody.charCodeAt(i);
   }
   return ndtMessage;
-};
+}
 
 /**
  * Parses messages received from the NDT server.
@@ -233,7 +233,7 @@ function parseNdtMessage(buffer) {
   }
   response.push(message);
   return response;
-};
+}
 
 /**
  * Exception related to low-level connectivity failures.
@@ -243,7 +243,7 @@ function parseNdtMessage(buffer) {
 function ConnectionException(message) {
   this.logger(message);
   this.callbacks.onerror(message);
-};
+}
 
 /**
  * Exception related to an unsupported browser.
@@ -253,7 +253,7 @@ function ConnectionException(message) {
 function UnsupportedBrowser(message) {
   this.logger(message);
   this.callbacks.onerror(message);
-};
+}
 
 /**
  * Exception related to test failures, such as behavior inconsistent with
@@ -264,7 +264,7 @@ function UnsupportedBrowser(message) {
 function TestFailureException(message) {
   this.logger(message);
   this.callbacks.onerror(message);
-};
+}
 
 /**
  * A simple helper function to create websockets consistently.
@@ -283,7 +283,7 @@ function createWebsocket(serverAddress, serverPort, urlPath, protocol) {
   };
   this.sockets.push(createdWebsocket);
   return createdWebsocket;
-};
+}
 
 /**
  * NDT's Client-to-Server (C2S) Upload Test
@@ -370,7 +370,7 @@ function ndtC2sTest() {
     that.logger('C2S: State = ' + state + ' type = ' + messageType + '(' +
         that.NDT_MESSAGES[messageType] + ') message = ', messageContent);
   };
-};
+}
 
 /**
  * NDT's Server-to-Client (S2C) Download Test
@@ -472,7 +472,7 @@ function ndtS2cTest(ndtSocket) {
     that.logger('S2C: State = ' + state + ' type = ' + messageType + '(' +
       that.NDT_MESSAGES[messageType] + ') message = ', messageContent);
   };
-};
+}
 
 /**
  * NDT's META (S2C) Download Test
@@ -513,7 +513,7 @@ function ndtMetaTest(ndtSocket) {
       state + ', ' + messageType + ', ' + messageContent.msg;
     throw that.TestFailureException(errorMessage);
   };
-};
+}
 
 /**
  * Start a series of NDT tests.
@@ -656,4 +656,4 @@ function startTest(server, serverPort, serverPath, callbacks, updateInterval) {
     errorMessage = that.parseNdtMessage(response.data)[3].msg;
     throw that.TestFailureException(errorMessage);
   };
-};
+}

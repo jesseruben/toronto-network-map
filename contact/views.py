@@ -10,6 +10,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ContactView(generics.CreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer

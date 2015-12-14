@@ -10,7 +10,7 @@
   function config($routeProvider, $logProvider, PATH) {
     $logProvider.debugEnabled(true);
 
-    $routeProvider.when('/', {
+    $routeProvider.when('/testlandingpage', {
         templateUrl: PATH.BASE_TEMPLATE_URL + 'static/main.html',
         controller: 'StaticPageController',
         controllerAs: 'vm'
@@ -25,6 +25,10 @@
       }).when('/speedtest', {
         templateUrl: PATH.BASE_TEMPLATE_URL + 'speedtest/speedtest.html',
         controller: 'SpeedtestController',
+        controllerAs: 'vm'
+      }).when('/', {
+        templateUrl: PATH.BASE_TEMPLATE_URL + 'ndt/map.html',
+        controller: 'MapController',
         controllerAs: 'vm'
       }).when('/settings/:username', {
         controller: 'AccountController',

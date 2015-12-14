@@ -19,7 +19,7 @@
     function StaticPageController ($translate, $window) {
         var vm = this;
         // set the language button label the opposite language that system uses
-        vm.lang = ($translate.use()=="en") ? "en" : "en";
+        vm.lang = ($translate.use()=="en") ? "fa" : "en";
         vm.changeLanguage = function (langKey) {
                 var date = new Date();
                 var cookieExpiresInDays = 30;
@@ -32,7 +32,7 @@
                     document.cookie='LANG="en"; path=/' + expires;
                     $window.location.reload();
                 } else {
-                    document.cookie='LANG="en"; path=/' + expires;
+                    document.cookie='LANG="fa"; path=/' + expires;
                     $window.location.reload();
                 }
         }

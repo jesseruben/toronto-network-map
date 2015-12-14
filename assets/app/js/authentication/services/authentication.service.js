@@ -13,13 +13,13 @@
         .module('ndtApp.authentication.services')
         .factory('Authentication', Authentication);
 
-    Authentication.$inject = ['$cookies', '$http', '$translate', '$filter', 'notify', '$log'];
+    Authentication.$inject = ['$http', '$translate', '$filter', 'notify', '$log', '$q'];
 
     /**
      * @namespace Authentication
      * @returns {Factory}
      */
-    function Authentication($cookies, $http, $translate, $filter, notify, $log) {
+    function Authentication($http, $translate, $filter, notify, $log, $q) {
         var logger = $log.getInstance('Authentication Service');
         /**
          * @name Authentication
@@ -52,11 +52,11 @@
          * @memberOf ndtApp.authentication.services.Authentication
          */
         function getAuthenticatedAccount() {
-            if (!$cookies.get('authenticatedAccount')) {
-                return;
+            if (localStorage.authenticatedAccount) {
+                return JSON.parse(localStorage.authenticatedAccount);
+            } else {
+                return null;
             }
-
-            return JSON.parse($cookies.get('authenticatedAccount'));
         }
 
         /**
@@ -121,10 +121,7 @@
          * @memberOf ndtApp.authentication.services.Authentication
          */
         function isAuthenticated() {
-            // !! better use to convert a value to boolean
-            // angular 1.3 syntax
-            //return !!$cookies.authenticatedAccount;
-            return !!$cookies.get('authenticatedAccount');
+            return !!localStorage.authenticatedAccount;
         }
 
 
@@ -146,6 +143,7 @@
              * @desc Set the authenticated account and redirect to index
              */
             function loginSuccessFn(data, status, headers, config) {
+
                 Authentication.setAuthenticatedAccount(data.data.account);
                 if (data.data.message && data.data.status){
                     var msg= '<span><strong>' + data.data.status+ ': </strong>' + data.data.message+ '</span>';
@@ -157,7 +155,9 @@
                 } else {
                     logger.error("Inappropriate data is returned from the server: [%s]:  %s", status, data);
                 }
+
                 window.location = '/';
+                return data.data;
             }
 
             /**
@@ -182,6 +182,9 @@
                         classes : "alert-danger"
                     });
                 }
+                // Note that if we return a non-promised value from the error callback it will
+                // resolve and not reject the derived promise. So we need to reject it explicitly.
+                return $q.reject(data.data);
 
             }
         }
@@ -304,27 +307,23 @@
 
         /**
          * @name setAuthenticatedUser
-         * @desc Stringify the account object and store it in a cookie
+         * @desc Stringify the account object and store it in a localStorage
          * @param {Object} account The acount object to be stored
          * @returns {undefined}
          * @memberOf ndtApp.authentication.services.Authentication
          */
         function setAuthenticatedAccount(account) {
-            // Angular 1.3 syntax
-            //$cookies.authenticatedAccount = JSON.stringify(account);
-            $cookies.put('authenticatedAccount', JSON.stringify(account));
+            localStorage.setItem('authenticatedAccount', JSON.stringify(account));
         }
 
         /**
          * @name unauthenticate
-         * @desc Delete the cookie where the account object is stored, it's different than logout and it happens at UI
+         * @desc Delete the localStorage where the account object is stored, it's different than logout and it happens at UI
          * @returns {undefined}
          * @memberOf ndtApp.authentication.services.Authentication
          */
         function unauthenticate() {
-            // angular 1.3 syntax
-            // delete $cookies.authenticatedAccount;
-            $cookies.remove('authenticatedAccount');
+            localStorage.removeItem('authenticatedAccount');
         }
 
         /**

@@ -3,11 +3,11 @@ from django.utils.translation import ugettext as _
 from accounts.models import User
 from isp.models import ISP
 from locations.models import Country
-import random
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from random import SystemRandom
 import hashlib
 
-def _createhash():
-    return hashlib.sha1(str(random.random())).hexdigest()
 
 class NDTProfile(models.Model):
     # TODO: change the countries/cities implementation
@@ -57,8 +57,13 @@ class NDTProfile(models.Model):
     def __unicode__(self):
         return u"NDT PROFILE ID #{0} BELONGING TO USER WITH NAME {1}".format(self.id, self.name)
 
-class NDT(models.Model):
 
+def _create_hash():
+    rand = SystemRandom()
+    return hashlib.sha512(str(rand.getrandbits(512))).hexdigest()
+
+
+class NDT(models.Model):
     BUSINESS = 'BUSINESS'
     HOME = 'HOME'
     PUBLIC = 'PUBLIC'
@@ -74,9 +79,9 @@ class NDT(models.Model):
     download_rate = models.FloatField(null=False, blank=False, verbose_name='Actual Download Rate (Kb)')
     upload_rate = models.FloatField(null=False, blank=False, verbose_name='Actual Upload Rate (Kb)')
     nominal_download_rate = models.FloatField(null=True, blank=True,
-                                                        verbose_name='Theoretical Download Rate(Kb)')
+                                              verbose_name='Theoretical Download Rate(Kb)')
     nominal_upload_rate = models.FloatField(null=True, blank=True,
-                                                      verbose_name='Theoretical Upload Rate (Kb)')
+                                            verbose_name='Theoretical Upload Rate (Kb)')
     latency = models.DecimalField(max_digits=6, decimal_places=3, default=0, null=False, blank=False)
     # 5 decimal places for latitude and longitude is accurate to within ~ 1.11 meters
     latitude = models.DecimalField(max_digits=8, decimal_places=5, null=True, blank=True)
@@ -92,15 +97,19 @@ class NDT(models.Model):
                                     blank=True, default='Home')
     province = models.CharField(max_length=64, null=True)
     rating_general = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='general rating')
-    hash = models.CharField(max_length=100, default=_createhash, unique=True, verbose_name='unique hash value used for UI identification')
-    average_index = models.DecimalField(max_digits=5, decimal_places=2, default=1, blank=False, null=False, verbose_name='Number of test results contributing to the average')
+    hash = models.CharField(max_length=100, unique=True, default=_create_hash,
+                            verbose_name='unique hash value used for UI identification')
+    average_index = models.DecimalField(max_digits=5, decimal_places=2, default=1, blank=False,
+                                        null=False, verbose_name='Number of test results contributing to the average')
 
     def __unicode__(self):
         return u"NDT ID #{0}".format(self.id)
 
+
 class Web100(models.Model):
     ndt = models.ForeignKey(NDT, null=False)
     blob = models.TextField(null=False)
+
 
 class Server(models.Model):
     name = models.CharField(max_length=20, blank=False, null=False, verbose_name=u'Server Name')

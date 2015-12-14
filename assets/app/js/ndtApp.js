@@ -24,12 +24,18 @@ angular
     'ui.bootstrap',
     'pascalprecht.translate',
     'cgNotify',
+    'uiGmapgoogle-maps',
     'angular-logger',
     'ndtApp.authentication',
     'ndtApp.speedtest',
     'ndtApp.reports',
     'ndtApp.static',
-    'ndtApp.contact'
+    'ndtApp.contact',
+    'ndtApp.ndt',
+    'ngAria',
+    'ngMaterial',
+    'ui.slider',
+    'ngMessages'
   ]);
 
   angular

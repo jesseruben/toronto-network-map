@@ -1,49 +1,41 @@
 <div class="container">
     <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <h1 translate="LOGIN"></h1>
-
-        <div class="well">
+      <div class="col-md-4 col-md-offset-4">
+        <md-toolbar>
+            <h3 style="text-align:center;" translate="LOGIN"></h3>
+        </md-toolbar>
+        <div class="well menu-demo-container" layout-align="center center">
           <form role="form" novalidate name="loginForm" ng-submit="vm.login()" id="login-form">
-            <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[loginForm.userEmail.$invalid && loginForm.userEmail.$dirty]">
-              <label for="login__email" translate="EMAIL"></label>
-              <input class="form-control" id="login__email" ng-model="vm.email" name="userEmail"
-                     placeholder="mail@example.com"  type="email" valid-email dir="ltr" required/>
-                <span ng-show="loginForm.userEmail.$valid" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-check-square-o"></i>
-                </span>
-                <span ng-show="loginForm.userEmail.$invalid && loginForm.userEmail.$dirty" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-warning"></i>
-                </span>
-                <div class="text-warning" ng-show="loginForm.userEmail.$invalid && loginForm.userEmail.$dirty">
-                        {{vm.getError(loginForm.userEmail.$error)}}
-                </div>
+            <div class="form-group" ng-class="{true:'has-error', false:'has-success'}[loginForm.userEmail.$invalid && loginForm.userEmail.$dirty]">
+                <md-input-container>
+                    <label for="login__email" translate="EMAIL"></label>
+                    <input id="login__email" ng-model="vm.email" type="email" name="userEmail" valid-email dir="ltr" required/>
+                    <div ng-messages="loginForm.userEmail.$error">
+                        <div class="text-warning" ng-show="loginForm.userEmail.$invalid && loginForm.userEmail.$dirty">
+                                {{vm.getError(loginForm.userEmail.$error)}}
+                        </div>
+                    </div>
+                </md-input-container>
             </div>
-
             <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[loginForm.userPassword.$invalid && loginForm.userPassword.$dirty]">
-              <label for="login__password" translate="PASSWORD"></label>
-              <input type="password" class="form-control" id="login__password" ng-model="vm.password" placeholder="{{ 'PASSWORD' | translate }}"  dir="ltr" required/>
-              <span ng-show="loginForm.userPassword.$valid" class="form-control-feedback" aria-hidden="true">
-                    <i class="fa fa-check-square-o"></i>
-              </span>
-              <span ng-show="loginForm.userPassword.$invalid && loginForm.userPassword.$dirty" class="form-control-feedback ltr" aria-hidden="true">
-                    <i class="fa fa-warning"></i>
-              </span>
-              <div class="text-warning" ng-show="loginForm.userPassword.$invalid && loginForm.userPassword.$dirty">
-                    {{vm.getError(loginForm.userPassword.$error)}}
-              </div>
+                <md-input-container>
+                  <label for="login__password" translate="PASSWORD"></label>
+                  <input class="form-control" id="login__password" ng-model="vm.password" name="userPassword" dir="ltr" type="password" required/>
+                  <div ng-messages="loginForm.userPassword.$error">
+                      <div class="text-warning" ng-show="loginForm.userPassword.$invalid && loginForm.userPassword.$dirty">
+                            {{vm.getError(loginForm.userPassword.$error)}}
+                      </div>
+                  </div>
+                </md-input-container>
             </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-block btn-primary" ng-disabled="loginForm.$invalid">
+            <div class="form-group" style="text-align:center;">
+                <md-button type="submit" class="md-raised md-primary btn-block" aria-label="..." style="margin:0px 0px;" ng-disabled="loginForm.$invalid">
                     <span translate="LOGIN"></span>
-                </button>
+                </md-button>
             </div>
-
-            <div class="form-group">
-                <a class="nazli" href="forgotpassword" translate="FORGOTPASSWORD"></a>
+            <div class="form-group" style="text-align:center;">
+                <a href="forgotpassword" translate="FORGOTPASSWORD"></a>
             </div>
-
           </form>
         </div>
       </div> <!--column-->

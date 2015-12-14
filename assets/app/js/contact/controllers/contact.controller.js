@@ -26,14 +26,20 @@
           Contact.sendMessage(vm.email, vm.subject, vm.message);
       }
 
-      vm.getError = function(error) {
+      vm.getError = function(error, min, max) {
         if (angular.isDefined(error)){
             if (error.required){
                 return $filter('translate')('ERROR_REQUIRED');
             } else if (error.number){
                 return $filter('translate')('ERROR_NUMBER');
+            } else if (error.email){
+                return $filter('translate')('ERROR_EMAIL');
+            } else if (error.minlength){
+                return $filter('translate')('ERROR_SHORT')+ min;
+            } else if (error.maxlength) {
+                return $filter('translate')('ERROR_LONG') + max;
             }
-        } else return;
+        }
       }
   }
 })();
