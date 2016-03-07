@@ -1,0 +1,12 @@
+{% load compress %}
+{% load staticfiles %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+{% compress css %}
+    {% if LANGUAGE_BIDI %}
+       <link rel="stylesheet" type="text/css" href="{% static 'build/css/styles.rtl.css' %}" />
+    {% else %}
+       <link rel="stylesheet" type="text/css" href="{% static 'build/css/styles.ltr.css' %}" />
+    {% endif %}
+{% endcompress %}

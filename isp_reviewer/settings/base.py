@@ -42,7 +42,6 @@ with open(home + '/.isp_secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 ########## END SECRET CONFIGURATION
 
-home = expanduser('~')
 with open(home + '/.isp_db_password.txt') as f:
     DB_PASSWORD = f.read().strip()
 
@@ -75,6 +74,7 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis.db',
 
     # Useful template tags:
     # 'django.contrib.humanize',
@@ -97,6 +97,7 @@ LOCAL_APPS = (
     'accounts',
     'NDT',
     'isp',
+    'faq',
     'cities_light',
     'locations',
     'contact',
@@ -113,13 +114,13 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
 MIDDLEWARE_CLASSES = (
     'djangosecure.middleware.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'AdminLocale.AdminLocaleURLMiddleware.AdminLocaleURLMiddleware',
     'admin_ip_whitelist.middleware.AdminAcceessIPWhiteListMiddleware'
 )
 ########## END MIDDLEWARE CONFIGURATION
@@ -147,7 +148,7 @@ WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 TIME_ZONE = 'UTC'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'fa'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
@@ -173,8 +174,8 @@ SESSION_COOKIE_PATH = '/;HttpOnly'
 # SESSION_COOKIE_SECURE = True
 SECURE_FRAME_DENY = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_HSTS_SECONDS  = 10
+SECURE_CONTENT_TYPE_NOSNIFF = False  # This should go back to True
+SECURE_HSTS_SECONDS = 10
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_SSL_REDIRECT = False
 

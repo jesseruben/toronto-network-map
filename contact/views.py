@@ -17,11 +17,12 @@ class ContactView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
+        name = data.get('name', None)
         email = data.get('email', None)
         subject = data.get('subject', None)
         message = data.get('message', None)
         try:
-            email = EmailMessage(subject, email + ' : ' + message, to=[settings.CONTACT_EMAIL])
+            email = EmailMessage('from ' + name + ': ' + subject, email + ' : ' + message, to=[settings.CONTACT_EMAIL])
             email.send()
             return Response({
                 'status': _('Success'),

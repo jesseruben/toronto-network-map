@@ -1,0 +1,58 @@
+<div class="bg-white-only b-l bg-auto no-border-xs contact-panel ng-right">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3" translate="contact.HEADING"></h1>
+    </div>
+
+    <div class="container">
+        <div class="message">
+            <p translate="contact.DESC"></p>
+            <hr>
+            <form role="form" class="form-validation" id="contactForm" method="post" name="contactForm" novalidate>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">{{ 'contact.YOUR_NAME' | translate }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input name="userName" id="userName" class="form-control" ng-model="vm.name"
+                                       ng-minlength="3" ng-maxlength="20" ng-model-options="{ updateOn: 'blur' }" required>
+                            </div>
+                            <div ng-messages="contactForm.userName.$error">
+                                <span class="text-danger"
+                                      ng-show="contactForm.userName.$invalid && contactForm.userName.$dirty">
+                                         {{ vm.getError(contactForm.userName.$error, 5, 10)}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">{{ 'contact.EMAIL_ADDRESS' | translate }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input name="userEmail" id="userEmail" class="form-control" valid-email
+                                       ng-model="vm.email" ng-model-options="{ updateOn: 'blur' }">
+                            </div>
+                            <div ng-messages="contactForm.userEmail.$error">
+                                <span class="text-danger"
+                                      ng-show="contactForm.userEmail.$invalid && contactForm.userEmail.$dirty">
+                                         {{vm.getError(contactForm.userEmail.$error)}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject">{{ 'contact.SUBJECT' | translate }}</label>
+                    <input type="text" name="subject" class="form-control" ng-model="vm.subject" id="subject"/>
+                </div>
+                <div class="form-group">
+                    <label for="message">{{ 'contact.YOUR_MESSAGE' | translate }}</label>
+                    <textarea name="message" class="form-control" id="message" ng-model="vm.message" rows="6"></textarea>
+                </div>
+            </form>
+            <button class="btn" ng-click="vm.sendMessage()">{{ 'contact.CONTACT_US' | translate }}</button>
+        </div>
+    </div>
+
+</div>

@@ -5,6 +5,7 @@ import json
 from django.core.urlresolvers import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+from django.contrib.gis.geos import *
 import logging
 
 # getting an instance of the logger
@@ -17,11 +18,11 @@ def approx_equal(a, b, tol):
 
 class ISPModelTests(TestCase):
     def setUp(self):
-        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=6476078000, support_phone=1800,
+        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone='647', support_phone='1800',
                                        rating=1.5, facebook='rogers.facebook.com', twitter='rogers.twitter.com',
                                        support_link='support.rogers.com')
         self.isp1.save()
-        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=9052342000, support_phone=2100,
+        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone='905', support_phone='2100',
                                        rating=0.5, facebook='bell.facebook.com', twitter='bell.twitter.com',
                                        support_link='support.bell.com')
         self.isp2.save()
@@ -45,8 +46,8 @@ class ISPModelTests(TestCase):
     def test_isp_model_create(self):
         isp = ISP.objects.get(name='rogers')
         self.assertEqual(isp.website, 'rogers.ca')
-        self.assertEqual(isp.phone, 6476078000)
-        self.assertEqual(isp.support_phone, 1800)
+        self.assertEqual(isp.phone, '647')
+        self.assertEqual(isp.support_phone, '1800')
         self.assertTrue(approx_equal(1.5, isp.rating, 0.01), True)
         self.assertEqual(isp.facebook, 'rogers.facebook.com')
         self.assertEqual(isp.twitter, 'rogers.twitter.com')
@@ -77,11 +78,11 @@ class ISPModelTests(TestCase):
 
 class ISPViewTests(APITestCase):
     def setUp(self):
-        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=6476078000, support_phone=1800,
+        self.isp1 = ISP.objects.create(name='rogers', website='rogers.ca', phone=647, support_phone=1800,
                                        rating=1.5, facebook='rogers.facebook.com', twitter='rogers.twitter.com',
                                        support_link='support.rogers.com')
         self.isp1.save()
-        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=9052342000, support_phone=2100,
+        self.isp2 = ISP.objects.create(name='bell', website='bell.ca', phone=905, support_phone=2100,
                                        rating=0.5, facebook='bell.facebook.com', twitter='bell.twitter.com',
                                        support_link='support.bell.com')
         self.isp2.save()
@@ -95,28 +96,28 @@ class ISPViewTests(APITestCase):
                                          bandwidth=False, limited_offer=True, link='plan3.com', name='plan3')
         self.plan3.save()
         self.ndt = NDT.objects.create(download_rate=444, upload_rate=33, latency=30, isp_name=self.isp1.name,
-                                      latitude=170.23539, longitude=120.34)
+                                      location=Point(170.23539, 120.34))
         self.ndt.save()
         self.ndt2 = NDT.objects.create(download_rate=445, upload_rate=33, latency=30, isp_name=self.isp2.name,
-                                       latitude=170.23539, longitude=120.34)
+                                       location=Point(170.23539, 120.34))
         self.ndt2.save()
         self.ndt3 = NDT.objects.create(download_rate=446, upload_rate=33, latency=30, isp_name=self.isp2.name,
-                                       latitude=170.23539, longitude=120.34)
+                                       location=Point(170.23539, 120.34))
         self.ndt3.save()
         self.ndt4 = NDT.objects.create(download_rate=447, upload_rate=33, latency=30, isp_name=self.isp2.name,
-                                       latitude=170.23539, longitude=120.34)
+                                       location=Point(170.23539, 120.34))
         self.ndt4.save()
         self.ndt_wrong = NDT.objects.create(download_rate=997, upload_rate=33, latency=30, isp_name=self.isp1.name,
-                                            latitude=170.23539, longitude=120.34)
+                                            location=Point(170.23539, 120.34))
         self.ndt_wrong.save()
         self.ndt5 = NDT.objects.create(download_rate=448, upload_rate=33, latency=30, isp_name=self.isp2.name,
-                                       latitude=170.23539, longitude=120.34)
+                                       location=Point(170.23539, 120.34))
         self.ndt5.save()
         self.ndt6 = NDT.objects.create(download_rate=449, upload_rate=33, latency=30, isp_name=self.isp2.name,
-                                       latitude=170.23539, longitude=120.34)
+                                       location=Point(170.23539, 120.34))
         self.ndt6.save()
         self.ndt7 = NDT.objects.create(download_rate=450, upload_rate=33, latency=30, isp_name=self.isp2.name,
-                                       latitude=170.23539, longitude=120.34)
+                                       location=Point(170.23539, 120.34))
         self.ndt7.save()
         self.isp_url_list = reverse('isp-list')
         self.url_retrieve_isp1 = reverse('isp-detail', kwargs={'pk': self.isp1.id})

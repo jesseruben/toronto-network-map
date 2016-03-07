@@ -67,21 +67,21 @@ class LoginViewTests(APITestCase):
 
     def test_login_wrong_credential(self):
         response = self.client.post(self.url, self.wrong_data, format='json')
-        expected_response = {u'message': u'Username/password combination invalid.', u'status': u'Unauthorized'}
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        expected_response = {u'message': u'COMBINATION_INVALID', u'status': u'Unauthorized'}
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(json.loads(response.content), expected_response)
 
     def test_login_correct_credential(self):
         response = self.client.post(self.url, self.correct_data, format='json')
         # response dict is too long so we just check the message
-        expected_response = u'You are logged in successfully.'
+        expected_response = u'LOGIN_SUCCESSFUL'
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
     def test_login_throttle_post_wrong_data(self):
         for x in range(0, 20):
             response = self.client.post(self.url, self.wrong_data, format='json')
-            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         response = self.client.post(self.url, self.wrong_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
@@ -128,7 +128,7 @@ class UpdatePasswordViewTests(APITestCase):
     def test_update_post(self):
         response = self.client.post(self.url, {'password': 'Password12', 'new_password': 'New_8_chars',
                                                'confirm_password': 'New_8_chars'}, format='json')
-        expected_response = u'Successfully updated the user password.'
+        expected_response = u'PASSWORD_UPDATE_SUCCESS'
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
@@ -142,7 +142,7 @@ class UpdatePasswordViewTests(APITestCase):
     def test_update_post_invalid_user(self):
         response = self.client.post(self.url, {'password': 'invalid', 'new_password': '1abfCdfegg',
                                                'confirm_password': '1abfCdfegg'}, format='json')
-        expected_response = u'Username/password combination invalid.'
+        expected_response = u'COMBINATION_INVALID'
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
@@ -191,7 +191,7 @@ class ForgotPasswordViewTests(APITestCase):
 
     def test_forgot_password(self):
         response = self.client.post(self.url, {'email': 'name1@test.com'}, format='json')
-        expected_response = u'If registered, an email will be sent to: name1@test.com'
+        expected_response = u'IF_VALID_AN_EMAIL_SENT'
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
         u = UserUID.objects.get(user=self.user.id)
@@ -203,10 +203,10 @@ class SetPasswordViewTests(APITestCase):
         self.user = User(email='name1@test.com', username='name1')
         self.user.set_password('HelloJohn9')
         self.user.save()
-        self.user_uid = UserUID.objects.create(guid='ZMKIO', user=self.user)
+        self.user_uid = UserUID.objects.create(guid="ZMKIO", user=self.user)
         self.user_uid.expiration_date = self.user_uid.expiration_date + timedelta(days=1)
         self.user_uid.save()
-        self.user_uid_2 = UserUID.objects.create(guid='ZMKIO2', user=self.user)
+        self.user_uid_2 = UserUID.objects.create(guid="ZMKIO2", user=self.user)
         self.user_uid_2.expiration_date = self.user_uid_2.expiration_date - timedelta(days=1)
         self.user_uid_2.save()
         self.url = reverse('setpassword')
@@ -221,28 +221,28 @@ class SetPasswordViewTests(APITestCase):
 
     def test_set_password_mismatch(self):
         response = self.client.post(self.url, {'new_password': 'hello', 'confirm_password': 'not_hello'}, format='json')
-        expected_response = u'New Pass and Confirm Password do not match.'
+        expected_response = u'PASSWORD_MISMATCH'
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
     def test_set_guid_valid(self):
         response = self.client.post(self.url, {'new_password': '1Hellojack', 'confirm_password': '1Hellojack', 'guid': 'ZMKIO'},
                                     format='json')
-        expected_response = u'Successfully updated the user password.'
+        expected_response = u'PASSWORD_UPDATE_SUCCESS'
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
     def test_set_guid_expired(self):
         response = self.client.post(self.url, {'new_password': 'H3elloooo', 'confirm_password': 'H3elloooo', 'guid': 'ZMKIO2'},
                                     format='json')
-        expected_response = u'The activation link is not valid'
+        expected_response = u'ACTIVATION_LINK_INVALID'
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
     def test_set_guid_invalid(self):
         response = self.client.post(self.url, {'new_password': 'H3elloooo', 'confirm_password': 'H3elloooo', 'guid': 'invalid'},
                                     format='json')
-        expected_response = u'The activation link is not valid'
+        expected_response = u'ACTIVATION_LINK_INVALID'
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
@@ -291,7 +291,7 @@ class DeactivateViewTests(APITestCase):
 
     def test_deactivate_success(self):
         response = self.client.post(self.url, {'password': 'password'}, format='json')
-        expected_response = u'Successfully deleted the account.'
+        expected_response = u'DEACTIVATION_SUCCESS'
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
@@ -304,7 +304,7 @@ class DeactivateViewTests(APITestCase):
     def test_deactivate_unauthenticated_user(self):
         self.client.logout()
         response = self.client2.post(self.url, {'password': 'irrelevant'}, format='json')
-        expected_response = u'User is not authorized to perform this action.'
+        expected_response = u'UNAUTHORIZED'
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
@@ -338,7 +338,7 @@ class UserViewTests(APITestCase):
 
     def test_register_correct_data(self):
         response = self.client.post(self.url, self.correct_data, format='json')
-        expected_response = {u'status': u'Success', u'message': u'Your account is created'}
+        expected_response = {u'status': u'Success', u'message': u'ACCOUNT_CREATED'}
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(json.loads(response.content), expected_response)
 
@@ -351,19 +351,19 @@ class UserViewTests(APITestCase):
         """
         with transaction.atomic():
             response = self.client.post(self.url, self.duplicate_data, format='json')
-            expected_response = u'User info is invalid.'
+            expected_response = u'INVALID_USER_INFO'
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(json.loads(response.content)['message'], expected_response)
 
     def test_register_missing_data(self):
         response = self.client.post(self.url, format='json')
-        expected_response = u'User info is invalid.'
+        expected_response = u'INVALID_USER_INFO'
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
 
     def test_register_short_password(self):
         response = self.client.post(self.url, self.short_pass_data, format='json')
-        expected_response = u'User info is invalid.'
+        expected_response = u'INVALID_USER_INFO'
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content)['message'], expected_response)
         expected_response = u'Validation error'
@@ -401,6 +401,5 @@ class LogoutViewTests(APITestCase):
     def test_logged_in(self):
         response = self.client.post(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_response = u'You are successfully logged out.'
+        expected_response = u'LOGOUT_SUCCESS'
         self.assertEqual(json.loads(response.content)['message'], expected_response)
-

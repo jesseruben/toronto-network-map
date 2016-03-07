@@ -1,0 +1,139 @@
+<div ng-switch="vm.getCurrentPage()">
+    <!-- Login Form -->
+    <div ng-switch-when="login" class="container w-xxl w-auto-xs" ng-init="app.settings.container = false;">
+        <a href class="navbar-brand block m-t">{{ app.name }}</a>
+
+        <div class="m-b-lg">
+            <div class="wrapper text-center">
+                <strong translate="authModal.LOGIN_TITLE"></strong>
+            </div>
+            <form name="form" class="form-validation">
+                <div class="text-danger wrapper text-center" ng-show="vm.loginError">
+                    {{ vm.loginError }}
+                </div>
+                <div class="list-group list-group-sm">
+                    <div class="list-group-item">
+                        <input type="email" placeholder="{{ 'authModal.EMAIL' | translate }}" class="form-control no-border" ng-model="vm.email"
+                               required>
+                    </div>
+                    <div class="list-group-item">
+                        <input type="password" placeholder="{{ 'authModal.PASSWORD' | translate }}" class="form-control no-border"
+                               ng-model="vm.password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="vm.login()"
+                        ng-disabled='form.$invalid'>{{ 'authModal.LOG_IN' | translate }}
+                </button>
+                <div class="text-center m-t m-b"><a ng-click="vm.setCurrentPage(2)" translate="authModal.FORGOT_PASSWORD"></a></div>
+                <div class="line line-dashed"></div>
+                <p class="text-center">
+                    <small translate="authModal.DONT_HAVE_ACCOUNT"></small>
+                </p>
+                <a ng-click="vm.setCurrentPage(1)" class="btn btn-lg btn-default btn-block" translate="authModal.CREATE_ACCOUNT"></a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div ng-switch-when="signup" class="container w-xxl w-auto-xs" ng-init="app.settings.container = false;">
+        <a href class="navbar-brand block m-t">{{ app.name }}</a>
+
+        <div class="m-b-lg">
+            <div class="wrapper text-center">
+                <strong translate="authModal.SIGNUP_TITLE"></strong>
+            </div>
+            <form name="registrationForm" class="form-validation" novalidate>
+                <div class="text-danger wrapper text-center" ng-show="vm.registerError">
+                    {{ vm.registerError }}
+                </div>
+                <div class="form-group">
+                    <input placeholder="{{ 'authModal.USERNAME' | translate }}" name="userUsername" class="form-control" valid-alpha-numeric
+                           ng-model="vm.username" required>
+
+                    <div ng-messages="registrationForm.userUsername.$error">
+                        <span class="text-danger"
+                              ng-show="registrationForm.userUsername.$invalid && registrationForm.userUsername.$dirty">
+                                 {{ vm.getError(registrationForm.userUsername.$error, 5, 10)}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="userEmail" placeholder="{{ 'authModal.EMAIL' | translate }}" class="form-control" ng-model="vm.email"
+                           ng-model-options="{ updateOn: 'blur' }" validemail required>
+
+                    <div ng-messages="registrationForm.userEmail.$error">
+                        <span class="text-danger"
+                              ng-show="registrationForm.userEmail.$invalid && !registrationForm.userEmail.$pristine">
+                                {{ vm.getError(registrationForm.userEmail.$error)}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="{{ 'authModal.PASSWORD' | translate }}" id="userPassword" name="userPassword"
+                           class="form-control" ng-model="vm.password" ng-model-options="{ updateOn: 'blur' }"
+                           ng-minlength="8" ng-maxlength="24"
+                           ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/" required>
+
+                    <div ng-messages="registrationForm.userPassword.$error">
+                        <span class="text-danger"
+                              ng-show="registrationForm.userPassword.$invalid && registrationForm.userPassword.$dirty">
+                                 {{ vm.getError(registrationForm.userPassword.$error, 8, 24)}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="{{ 'authModal.CONFIRM_PASSWORD' | translate }}" class="form-control" name="confirmPassword"
+                           ng-model="vm.confirm_password" ng-model-options="{ updateOn: 'blur' }"
+                           ng-minlength="8" ng-maxlength="24"
+                           ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/" pw-check="userPassword"
+                           dir="ltr" required>
+
+                    <div ng-messages="registrationForm.confirmPassword.$error">
+                        <div class="text-danger"
+                             ng-show="registrationForm.confirmPassword.$invalid && registrationForm.confirmPassword.$dirty">
+                            {{ vm.getError(registrationForm.confirmPassword.$error, 8, 24)}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkbox m-b-md m-t-none">
+                    <label class="i-checks">
+                        <input type="checkbox" ng-model="agree" required><i></i> {{ 'authModal.AGREE_THE' | translate }} <a href>{{ 'authModal.TERMS_AND_POLICY' | translate }}</a>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="vm.register()"
+                        ng-disabled='registrationForm.$invalid'>{{ 'authModal.SIGNUP' | translate }}
+                </button>
+                <div class="line line-dashed"></div>
+                <p class="text-center">
+                    <small translate="authModal.ALREADY_HAVE_ACCOUNT"></small>
+                </p>
+                <a ng-click="vm.setCurrentPage(0)" class="btn btn-lg btn-default btn-block">{{ 'authModal.SIGN_IN' | translate }}</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgotpassword Form -->
+    <div ng-switch-when="forgotpassword" class="container w-xl w-auto-xs" ng-init="app.settings.container = false;">
+        <a href class="navbar-brand block m-t">{{ app.name }}</a>
+
+        <div class="m-b-lg">
+            <div class="wrapper text-center">
+                <strong translate="authModal.INPUT_EMAIL_RESET_PASSWORD"></strong>
+            </div>
+            <form name="forgotPasswordForm" ng-init="vm.isCollapsed=true" novalidate name="forgotPasswordForm"
+                  ng-submit="vm.forgotPassword()">
+                <div class="list-group list-group-sm">
+                    <div class="list-group-item">
+                        <input type="email" placeholder="{{ 'authModal.EMAIL' | translate }}" class="form-control no-border" ng-model="vm.email"
+                               name="userEmail"
+                               type="email" dir="ltr" valid-email required/>
+                    </div>
+                </div>
+                <button type="submit" ng-disabled="forgotPasswordForm.$invalid"
+                        class="btn btn-lg btn-primary btn-block">{{ 'authModal.SEND' | translate }}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

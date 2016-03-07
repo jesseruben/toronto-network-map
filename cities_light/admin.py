@@ -37,7 +37,7 @@ class CountryAdmin(admin.ModelAdmin):
         'continent',
     )
     form = CountryForm
-admin.site.register(Country, CountryAdmin)
+# admin.site.register(Country, CountryAdmin)
 
 
 class RegionAdmin(admin.ModelAdmin):
@@ -57,7 +57,7 @@ class RegionAdmin(admin.ModelAdmin):
         'country',
     )
     form = RegionForm
-admin.site.register(Region, RegionAdmin)
+# admin.site.register(Region, RegionAdmin)
 
 
 class CityChangeList(ChangeList):
@@ -91,4 +91,4 @@ class CityAdmin(admin.ModelAdmin):
     def get_changelist(self, request, **kwargs):
         return CityChangeList
 
-admin.site.register(City, CityAdmin)
+#admin.site.register(City, CityAdmin)

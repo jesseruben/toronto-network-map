@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col-md-3 col-md-offset-4">
+    <h4 translate="setPassword.SET_YOUR_PASS"></h4>
+    <div class="well">
+      <form role="form" novalidate name="updatePasswordForm" ng-submit="vm.updatePassword()">
+
+            <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[updatePasswordForm.user_password.$invalid && updatePasswordForm.user_password.$dirty]">
+              <label for="updatePassword__user_password" translate="authModal.PASSWORD"></label>
+              <input type="password" class="form-control ltr" id="updatePassword__user_password" name="user_password"
+                     ng-model="vm.user_password" placeholder="{{ 'authModal.PASSWORD' | translate }}"
+                      dir="ltr" required/>
+              <span ng-show="updatePasswordForm.user_password.$valid" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-check-square-o"></i>
+              </span>
+              <span ng-show="updatePasswordForm.user_password.$invalid && updatePasswordForm.user_password.$dirty" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-warning"></i>
+              </span>
+              <div class="text-danger" ng-show="updatePasswordForm.user_password.$invalid && updatePasswordForm.user_password.$dirty">
+                    {{vm.getError(updatePasswordForm.user_password.$error)}}
+              </div>
+            </div><!--Current Password-->
+
+            <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[updatePasswordForm.new_password.$invalid && updatePasswordForm.new_password.$dirty]">
+              <label for="updatePassword__new_password" translate="setPassword.NEW_PASSWORD"></label>
+              <input type="password" class="form-control ltr" id="updatePassword__new_password" name="new_password"
+                     ng-model="vm.new_password" placeholder="{{ 'setPassword.NEW_PASSWORD' | translate }}"
+                     ng-minlength="8" ng-maxlength="24" ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/"
+                     dir="ltr" ng-model-options="{ updateOn: 'blur' }" required/>
+              <span ng-show="updatePasswordForm.new_password.$valid" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-check-square-o"></i>
+              </span>
+              <span ng-show="updatePasswordForm.new_password.$invalid && updatePasswordForm.new_password.$dirty" class="form-control-feedback ltr" aria-hidden="true">
+                    <i class="fa fa-warning"></i>
+              </span>
+              <div class="text-danger" ng-show="updatePasswordForm.new_password.$invalid && updatePasswordForm.new_password.$dirty">
+                    {{vm.getError(updatePasswordForm.new_password.$error, 8, 24)}}
+              </div>
+            </div><!--New Password-->
+
+        <div class="form-group has-feedback" ng-class="{true:'has-error', false:'has-success'}[updatePasswordForm.confirm_password.$invalid && updatePasswordForm.confirm_password.$dirty]">
+          <label for="updatePassword__confirmPassword" translate="setPassword.CONFIRM_PASSWORD"></label>
+          <input type="password" class="form-control ltr" id="updatePassword__confirmPassword"  name="confirm_password"
+                 ng-model="vm.confirm_password" placeholder="{{ 'setPassword.CONFIRM_PASSWORD' | translate }}"
+                 ng-minlength="8" ng-maxlength="24" ng-pattern="/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/"
+                 pw-check="updatePassword__new_password" ng-model-options="{ updateOn: 'blur' }" dir="ltr" required/>
+          <span ng-show="updatePasswordForm.confirm_password.$valid" class="form-control-feedback ltr" aria-hidden="true">
+                <i class="fa fa-check-square-o"></i>
+          </span>
+          <span ng-show="updatePasswordForm.confirm_password.$invalid && updatePasswordForm.confirm_password.$dirty" class="form-control-feedback ltr" aria-hidden="true">
+                <i class="fa fa-warning"></i>
+          </span>
+          <div class="text-danger" ng-show="updatePasswordForm.confirm_password.$invalid && updatePasswordForm.confirm_password.$dirty">
+                {{vm.getError(updatePasswordForm.confirm_password.$error, 8, 24)}}
+          </div>
+        </div><!--Confirm Password-->
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" ng-disabled="updatePasswordForm.$invalid" ><span translate="setPassword.SUBMIT"></span></button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

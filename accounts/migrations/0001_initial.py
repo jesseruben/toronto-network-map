@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='The time when the user was created')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Last time user got update')),
                 ('notifications', models.IntegerField(default=0, verbose_name='Number of new notifications')),
-                ('log_guid', models.CharField(default=accounts.models._create_hash, unique=True, max_length=100, verbose_name='Globally Unique Identifier (GUID) for logging purposes')),
+                ('log_guid', models.TextField(default=accounts.models._create_hash, unique=True, max_length=256, verbose_name='Globally Unique Identifier (GUID) for logging purposes')),
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
             ],
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             name='UserUID',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('guid', models.CharField(unique=True, max_length=100, verbose_name='Globally Unique Identifier (GUID)')),
+                ('guid', models.TextField(unique=True, max_length=256, verbose_name='Globally Unique Identifier (GUID)')),
                 ('expiration_date', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Expiration Date')),
                 ('type', models.CharField(default=b'forgotPassword', max_length=1, verbose_name='Type', choices=[(b'forgotPassword', 'Forgot Password'), (b'activation', 'User Activation')])),
                 ('user', models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL)),

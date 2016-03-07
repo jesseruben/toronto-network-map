@@ -39,12 +39,13 @@ class UserViewSet(viewsets.ModelViewSet):
     }
 
     msgs = {
-        'finish_success': _("UserViewSet.create is finished successfully. User: {0}"),
-        'account_created': _("Your account is created")
+        'invalid_user_info': 'INVALID_USER_INFO',
+        'internal_server_error': 'INTERNAL_SERVER_ERROR',
+        'account_created': 'ACCOUNT_CREATED',
+        'finish_success': _("UserViewSet.create is finished successfully. User: {0}")
     }
 
     def get_permissions(self):
-        logger.info("UserViewSet.get_permissions is called.")
         # check for permission of update and destroy
         # If the HTTP method of the request ('GET', 'POST', etc) is "safe", then anyone can use that endpoint.
         # permissions are loaded either from permission.py or rest framework
@@ -74,15 +75,15 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({
                 # Translators: This message is generated during user creation
                 'status': _('Bad request'),
-                'message': _('User info is invalid.'),
+                'message': self.msgs['invalid_user_info'],
                 'errors': 'Validation error'
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             logger.exception(self.errs['exception'].format(e.message))
             return Response({
-                'status': _('Bad request'),
-                'message': e.message
+                'status': _('Error'),
+                'message': self.msgs['internal_server_error']
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -102,9 +103,9 @@ class LoginView(views.APIView):
 
     msgs = {
         'login_success': _("User has successfully logged in. User: {0}"),
-        'login_msg': _('You are logged in successfully.'),
-        'cannot_login': _('You can not log in with this account.'),
-        'combination_invalid': _('Username/password combination invalid.')
+        'login_msg': 'LOGIN_SUCCESSFUL',
+        'cannot_login': 'CAN_NOT_LOGIN',
+        'combination_invalid': 'COMBINATION_INVALID'
     }
 
     def post(self, request):
@@ -135,10 +136,15 @@ class LoginView(views.APIView):
             return Response({
                 'status': _('Unauthorized'),
                 'message': self.msgs['combination_invalid']
-            }, status=status.HTTP_401_UNAUTHORIZED)
+            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class LogoutView(views.APIView):
+
+    msgs = {
+        'logout_success': 'LOGOUT_SUCCESS'
+    }
+
     def post(self, request):
         if request.user.is_authenticated():
             logger.info("LogoutView.post is called. User: {0}".format(request.user.log_guid))
@@ -147,7 +153,7 @@ class LogoutView(views.APIView):
         logout(request)
         return Response({
             'status': _('Success'),
-            'message': _('You are successfully logged out.')
+            'message': self.msgs['logout_success']
         }, status=status.HTTP_200_OK)
 
 
@@ -174,8 +180,12 @@ class UpdatePasswordView(views.APIView):
 
     msgs = {
         'finish_success': _("UpdatePasswordView.post finished successfully. User: {0}"),
-        'update_pass_success': _("Successfully updated the user password."),
-        'cannot_update_pass': _('You cannot update the password on this account.'),
+        'update_pass_success': 'PASSWORD_UPDATE_SUCCESS',
+        'cannot_update_pass': 'CAN_NOT_UPDATE_PASSWORD',
+        'validation_error': 'VALIDATION_ERROR',
+        'password_mismatch': 'PASSWORD_MISMATCH',
+        'combination_invalid': 'COMBINATION_INVALID',
+        'internal_server_error': 'INTERNAL_SERVER_ERROR'
     }
 
     def post(self, request):
@@ -206,7 +216,7 @@ class UpdatePasswordView(views.APIView):
                                             status=status.HTTP_400_BAD_REQUEST)
                     except Exception as e:
                         logger.exception(self.errs['exception'].format(e.message))
-                        return Response({'status': _('Bad request'), 'message': self.errs['server_error']},
+                        return Response({'status': _('Bad request'), 'message': self.msgs['internal_server_error']},
                                         status=status.HTTP_400_BAD_REQUEST)
                 else:
                     logger.error(self.errs['user_inactive'].format(request.user.log_guid))
@@ -215,11 +225,11 @@ class UpdatePasswordView(views.APIView):
             else:
                 logger.error(self.errs['combination_invalid'])
                 return Response({
-                    'status': _('Unauthorized'), 'message': self.errs['combination_invalid']},
+                    'status': _('Unauthorized'), 'message': self.msgs['combination_invalid']},
                     status=status.HTTP_401_UNAUTHORIZED)
         else:
             logger.error(update_password_serializer.errors)
-            return Response({'status': 'Bad request', 'message': self.errs['password_mismatch'],
+            return Response({'status': 'Bad request', 'message': self.msgs['password_mismatch'],
                              'errors': 'Validation error'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -245,9 +255,11 @@ class ForgotPasswordView(views.APIView):
 
     msgs = {
         'finish_success': _("ForgotPasswordView.post finished successfully. User: {0}"),
-        'success': _("If registered, an email will be sent to: {0}"),
-        'update_pass_success': _("Successfully updated the user password."),
-        'cannot_update_pass': _('You cannot update the password on this account.'),
+        'success': 'IF_VALID_AN_EMAIL_SENT',
+        'internal_server_error': 'INTERNAL_SERVER_ERROR',
+        'user_not_found': 'USER_NOT_FOUND',
+        'update_pass_success': 'PASSWORD_UPDATE_SUCCESS',
+        'cannot_update_pass': 'CAN_NOT_UPDATE_PASSWORD'
     }
 
     def post(self, request):
@@ -259,7 +271,7 @@ class ForgotPasswordView(views.APIView):
             logger.exception(self.errs['user_not_found'].format(receiver_email))
             return Response({
                 'status': _('Success'),
-                'message': self.msgs['success'].format(receiver_email)
+                'message': self.msgs['success']
             }, status=status.HTTP_200_OK)
         if account is not None and receiver_email:
             data['guid'] = hashlib.sha512(str(SystemRandom().getrandbits(512))).hexdigest()
@@ -286,31 +298,31 @@ class ForgotPasswordView(views.APIView):
                         logger.info(self.msgs['finish_success'].format(account.log_guid))
                         return Response({
                             'status': _('Success'),
-                            'message': self.msgs['success'].format(receiver_email)
+                            'message': self.msgs['success']
                         }, status=status.HTTP_200_OK)
                     except Exception, e:
                         logger.exception(self.errs['smtp_fail'].format(e.message))
                         return Response({
                             'status': _('Fail'),
-                            'message': self.errs['server_error']
+                            'message': self.msgs['internal_server_error']
                         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 else:
                     logger.error(self.errs['UID_invalid'].format(account.log_guid, data['guid'], date))
                     return Response({
                         'status': _('Bad request'),
-                        'message': self.errs['server_error']
+                        'message': self.msgs['internal_server_error']
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
                 logger.exception(self.errs['exception'].format(account.log_guid, e.message))
                 return Response({
                     'status': _('Bad request'),
-                    'message': self.errs['server_error']
+                    'message': self.msgs['internal_server_error']
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             logger.error(self.errs['user_not_found'].format(account.log_guid))
             return Response({
                 'status': _('Bad request'),
-                'message': self.errs['user_not_found'].format(receiver_email)
+                'message': self.msgs['user_not_found']
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -334,12 +346,13 @@ class SetPasswordView(views.APIView):
         }
 
     msgs = {
-        'activation_invalid': _('The activation link is not valid'),
-        'password_mismatch': _('New Pass and Confirm Password do not match.'),
+        'activation_invalid': 'ACTIVATION_LINK_INVALID',
+        'password_mismatch': 'PASSWORD_MISMATCH',
         'finish_success': _("SetPasswordView.post finished successfully. GUID: {0}"),
         'success': _("If registered, an email will be sent to: {0}"),
-        'update_pass_success': _("Successfully updated the user password."),
+        'update_pass_success': 'PASSWORD_UPDATE_SUCCESS',
         'cannot_update_pass': _('You cannot update the password on this account.'),
+        'internal_server_error': 'INTERNAL_SERVER_ERROR'
     }
 
     def post(self, request):
@@ -376,10 +389,10 @@ class SetPasswordView(views.APIView):
         try:
             account = User.objects.get(id=user_uid.user_id)
         except ObjectDoesNotExist:
-            logger.exception(self.errs['GUID_invalid'].format(guid))
+            logger.exception(self.msgs['GUID_invalid'].format(guid))
             return Response({
                 'status': _('Fail'),
-                'message': self.errs['server_error']
+                'message': self.msgs['internal_server_error']
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if account is not None:
@@ -412,19 +425,19 @@ class SetPasswordView(views.APIView):
                             logger.error(self.errs['ser_not_valid'].format(guid, user_uid.user_id, uid_data['expiration_date']))
                             return Response({
                                 'status': _('Fail'),
-                                'message': self.errs['server_error']
+                                'message': self.msgs['internal_server_error']
                             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                     else:
                         logger.error(self.errs['server_error'])
                         return Response({
                             'status': _('Fail'),
-                            'message': self.errs['server_error']
+                            'message': self.msgs['internal_server_error']
                         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
                 logger.exception(self.errs['exception'].format(guid, e.message))
                 return Response({
                     'status': _('Bad request'),
-                    'message': self.errs['server_error']
+                    'message': self.msgs['internal_server_error']
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             logger.exception(self.errs['GUID_none'].format(guid))
@@ -443,8 +456,10 @@ class DeactivateView(views.APIView):
         }
 
     msgs = {
-        'deactivate_success': _("User account is successfully deactivated. User: {0} "),
-        'delete_success': _('Successfully deleted the account.')
+        'deactivate_success': 'DEACTIVATION_SUCCESS',
+        'pass_not_valid': 'INVALID_PASSWORD',
+        'delete_success': _('Successfully deleted the account.'),
+        'unauthorized': 'UNAUTHORIZED'
     }
 
     def post(self, request):
@@ -458,7 +473,7 @@ class DeactivateView(views.APIView):
                 logger.info(self.msgs['deactivate_success'].format(request.user.log_guid))
                 return Response({
                     'status': _('Success'),
-                    'message': self.msgs['delete_success']
+                    'message': self.msgs['deactivate_success']
                 }, status=status.HTTP_200_OK)
             logger.error(self.errs['deactivation_fail'].format(request.user.log_guid))
             return Response({
@@ -469,5 +484,5 @@ class DeactivateView(views.APIView):
             logger.info("DeactivateView.post is called on unauthenticated user")
             return Response({
                 'status': _('Unauthorized'),
-                'message': self.errs['unauthorized']
+                'message': self.msgs['unauthorized']
             }, status=status.HTTP_401_UNAUTHORIZED)

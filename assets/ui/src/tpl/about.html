@@ -1,0 +1,54 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm ng-right">
+  <!-- .aside -->
+  <div class="col w w-auto-xs bg-light inherit dk b-r">
+    <div class="wrapper-md b-b">
+      <a class="btn btn-link pull-right m-t-n-xs m-r-n-sm visible-sm visible-xs" ui-toggle-class="show" data-target="#nav-docs">
+        <i class="fa fa-bars"></i>
+      </a>
+      <span class="h4">درباره ما</span>
+    </div>
+    <div class="hidden-sm hidden-xs" id="nav-docs">
+      <ul class="nav">
+        <li class="padder b-b l-h-2x bg text-info"><em><a ui-scroll-to="about" class="content-list">About US</a></em></li>
+        <li><a ui-scroll-to="tools" class="content-list">Open Measurment Lab</a></li>
+        <li><a ui-scroll-to="about-tools" class="content-list">Network Diagnostic Test</a></li>
+        <li><a ui-scroll-to="ganalytics" class="content-list"></a></li>
+        <li class="padder b-b l-h-2x bg text-success"><em><a ui-scroll-to="faq" class="content-list">Frequently Asked Questions</a></em></li>
+      </ul>
+    </div>
+  </div>
+  <!-- /.aside -->
+  <div class="col">
+    <div class="clearfix padder-md" id="about">
+      <h3 class="text-info m-t-xl font-thin m-b-none">About US</h3>
+      <div class="content-p">
+        About US content
+      </div>
+      <div id="tools" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h3 class="m-t-xl">Open Measurment Lab</h3>
+      <p class="content-p">
+          M-Lab provides the largest collection of open Internet performance data on the planet. As a consortium of research, industry, and public interest partners, M-Lab is dedicated to providing an ecosystem for the open, verifiable measurement of global network performance. Real science requires verifiable processes, and M-Lab welcomes scientific collaboration and scrutiny. This is why all of the data collected by M-Lab's global measurement platform is made openly available, and all of the measurement tools hosted by M-Lab are open source. Anyone with the time and skill can review and improve the underlying methodologies and assumptions on which M-Lab's platform, tools, and data rely.
+          Transparency and review are key to good science, and good science is key to good measurement.
+      </p>
+      <div id="about-tools" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h3 class="m-t-xl">Network Diagnostic Test (NDT)</h3>
+      <p class="content-p">
+          NDT (Network Diagnostic Tool) provides a sophisticated speed and diagnostic test suitable for both the novice and the network researcher.
+          Not only does NDT report upload and download speeds, it also attempts to determine what problems limited speeds, and provides details diagnostic reporting on what it found. While the diagnostic messages are most useful for expert users,
+          they can also help novice users by allowing them to provide detailed trouble reports to their network administrator.
+      </p>
+      <h3 class="m-t-xl" id="faq">FAQs</h3>
+        <div class="row well"> <!--faq section -->
+            <div class="col-lg-11 col-sm-11">
+                 <uib-accordion close-others="true">
+                    <uib-accordion-group heading="{{ $index+1 }}- {{faq.question}}" ng-repeat="faq in vm.faqs | filter:faq">
+                      <span class="nazli" ng-bind-html="faq.answer"></span>
+                    </uib-accordion-group>
+                 </uib-accordion>
+            </div> <!-- col-lg-9 -->
+        </div> <!--faq row section-->
+    </div>
+  </div>
+</div>

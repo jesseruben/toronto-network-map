@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register(r'isp', ISPModelViewSet, base_name='isp')
-router.register(r'plan', PlanModelViewSet, base_name='plan')
+router.register(r'providers', ISPModelViewSet, base_name='isp')
+router.register(r'plans', PlanModelViewSet, base_name='plan')
 
 urlpatterns = [url(r'^', include(router.urls))]

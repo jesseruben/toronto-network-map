@@ -8,9 +8,9 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from accounts.models import User
 from isp.models import ISP
+from django.contrib.gis.geos import *
 import datetime
 import logging
-import time
 
 # getting an instance of the logger
 logger = logging.getLogger(__name__)
@@ -25,8 +25,8 @@ class NDTModelTests(TestCase):
         self.user = User.objects.create(username='richard', email='r@test.com')
         self.user.save()
         self.ndt = NDT.objects.create(download_rate=444, upload_rate=33, latency=30, nominal_upload_rate=35,
-                                      nominal_download_rate=500, latitude=170.23539, longitude=120.34)
-        self.isp = ISP.objects.create(name='rogers', website='rogers.ca', phone=4124124141, support_phone=1800,
+                                      nominal_download_rate=500, location=Point(170.39, 120.34))
+        self.isp = ISP.objects.create(name='rogers', website='rogers.ca', phone='4124', support_phone='1800',
                                       rating=1.5, facebook='rogers.facebook.com', twitter='rogers.twitter.com',
                                       support_link='support.rogers.com')
         self.isp.save()
@@ -44,31 +44,30 @@ class NDTModelTests(TestCase):
         self.user.delete()
 
     def test_check_ndt_using_id(self):
-        ndt = NDT.objects.get(id=1)
+        ndt = NDT.objects.get(download_rate=444)
         self.assertEqual(ndt.upload_rate, 33)
 
     def test_update_ndt(self):
-        ndt = NDT.objects.get(id=1)
-        ndt.latitude = 99.999
+        ndt = NDT.objects.get(download_rate=444)
+        ndt.location = Point(99.999, 34.32)
         ndt.save()
-        validation_ndt = NDT.objects.get(id=1)
-        self.assertEqual(approx_equal(float(validation_ndt.latitude), 99.999, 0.01), True)
+        validation_ndt = NDT.objects.get(download_rate=444)
+        self.assertEqual(validation_ndt.location, Point(99.999, 34.32))
 
     def test_check_ndt_profile_using_name(self):
         ndt_profile = NDTProfile.objects.get(name='name')
         self.assertEqual(ndt_profile.service_type, 'PUBLIC')
 
     def test_ndt_profile_update(self):
-        ndt_profile = NDTProfile.objects.get(id=1)
+        ndt_profile = NDTProfile.objects.get(name='name')
         ndt_profile.name = 'name2'
         ndt_profile.save()
-        validation_ndt_profile = NDTProfile.objects.get(id=1)
+        validation_ndt_profile = NDTProfile.objects.get(service_type='PUBLIC')
         self.assertEqual(validation_ndt_profile.name, 'name2')
 
     def test_ndt_profile_null_values(self):
-        ndt_profile = NDTProfile.objects.get(id=1)
-        self.assertEqual(ndt_profile.latitude, None)
-        self.assertEqual(ndt_profile.longitude, None)
+        ndt_profile = NDTProfile.objects.get(name='name')
+        self.assertEqual(ndt_profile.location, None)
         self.assertEqual(ndt_profile.nominal_download_rate, None)
         self.assertEqual(ndt_profile.nominal_upload_rate, None)
         self.assertEqual(ndt_profile.bandwidth, None)
@@ -84,34 +83,34 @@ class NDTModelTests(TestCase):
         self.assertNotEqual(ndt_profile.name, None)
 
     def test_ndt_profile_update_null_field(self):
-        ndt_profile = NDTProfile.objects.get(id=1)
+        ndt_profile = NDTProfile.objects.get(name='name')
         ndt_profile.nominal_download_rate = 65.54
         ndt_profile.save()
-        validation_ndt_profile = NDTProfile.objects.get(id=1)
+        validation_ndt_profile = NDTProfile.objects.get(name='name')
         self.assertEqual(approx_equal(float(validation_ndt_profile.nominal_download_rate), 65.54, 0.01), True)
 
     def test_ndt_profile_update_null_boolean_field(self):
-        ndt_profile = NDTProfile.objects.get(id=1)
+        ndt_profile = NDTProfile.objects.get(name='name')
         ndt_profile.vpn = True
         ndt_profile.save()
-        validation_ndt_profile = NDTProfile.objects.get(id=1)
+        validation_ndt_profile = NDTProfile.objects.get(name='name')
         self.assertTrue(validation_ndt_profile.vpn)
 
     def test_check_if_user_and_ndt_profile_connected(self):
-        ndt_profile = NDTProfile.objects.get(id=1)
+        ndt_profile = NDTProfile.objects.get(name='name')
         self.assertEqual(ndt_profile.user.id, self.user.id)
 
     def test_ndt_profile_isp_connected(self):
-        ndt_profile = NDTProfile.objects.get(id=1)
+        ndt_profile = NDTProfile.objects.get(name='name')
         self.assertEqual(ndt_profile.isp.name, self.isp.name)
         self.assertEqual(ndt_profile.isp.facebook, self.isp.facebook)
 
     def test_ndt_profile_isp_connected_get_isp(self):
-        isp = ISP.objects.get(id=1)
+        isp = ISP.objects.get(name='rogers')
         self.assertEqual(self.ndt_profile.isp.phone, isp.phone)
 
     def test_ndt_profile_isp_connected_after_update(self):
-        isp = ISP.objects.get(id=1)
+        isp = ISP.objects.get(name='rogers')
         isp.name = 'Rogers2'
         isp.save()
         ndt_profile = NDTProfile.objects.get(isp=self.isp)
@@ -130,12 +129,12 @@ class NDTViewTests(APITestCase):
         self.client.login(email='name@test.com', password='password')
         with transaction.atomic():
             self.ndt = NDT.objects.create(download_rate=444, upload_rate=33, latency=30,
-                                          latitude=170.23539, longitude=120.34)
+                                          location=Point(170.23539, 120.34))
             self.ndt2 = NDT.objects.create(download_rate=2, upload_rate=2, latency=2, rating_general=2,
-                                           latitude=22.222, longitude=99.901, isp_name='django')
+                                           location=Point(22.222, 99.901), isp_name='django')
             self.ndt3 = NDT.objects.create(download_rate=877, upload_rate=101, latency=30, rating_general=4,
-                                           latitude=110.23539, longitude=110.34, isp_name='python')
-        self.isp = ISP.objects.create(name='rogers', website='rogers.ca', phone=4124124141, support_phone=1800,
+                                           location=Point(110.23539, 110.34), isp_name='python')
+        self.isp = ISP.objects.create(name='rogers', website='rogers.ca', phone=4124, support_phone=1800,
                                       rating=1.5, facebook='rogers.facebook.com', twitter='rogers.twitter.com',
                                       support_link='support.rogers.com')
         self.isp.save()
@@ -173,17 +172,18 @@ class NDTViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_ndt_profile_modelviewset_get_functionality(self):
-        response = self.client.get(self.ndt_profile_url, format='json')
+        response = self.client.get(self.ndt_profile_url_retrieve_1, format='json')
         expected_response = 'name'
-        self.assertEqual(json.loads(response.content)[0]['name'], expected_response)
+        self.assertEqual(json.loads(response.content)['name'], expected_response)
         expected_response = 'PUBLIC'
-        self.assertEqual(json.loads(response.content)[0]['service_type'], expected_response)
+        self.assertEqual(json.loads(response.content)['service_type'], expected_response)
 
     def test_ndt_modelviewset_post(self):
         response = self.client.post(self.ndt_url, {'download_rate': '32', 'blob': 'hi',
                                                    'upload_rate': '21', 'latency': '29'},
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        NDT.objects.get(upload_rate=21).delete()
 
     def test_ndt_modelviewset_post_no_download_rate(self):
         response = self.client.post(self.ndt_url, {'upload_rate': '21.4', 'latency': '29',
@@ -196,12 +196,11 @@ class NDTViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_ndt_modelviewset_post_functionality(self):
-        response = self.client.post(self.ndt_url, {'download_rate': '32', 'upload_rate': '21', 'latency': '29',
-                                                   'blob': 'hello'},
-                                    format='json')
+        self.client.post(self.ndt_url, {'download_rate': '32', 'upload_rate': '21', 'latency': '29',
+                                                   'blob': 'hello'}, format='json')
         response = self.client.get(self.ndt_url, format='json')
-        expected_response = 32
-        self.assertEqual(json.loads(response.content)[3]['download_rate'], expected_response)
+        self.assertEqual(len(json.loads(response.content)), 4)
+        NDT.objects.get(download_rate=32).delete()
 
     def test_ndt_modelviewset_retrieve_functionality(self):
         response = self.client.get(self.ndt_url_retrieve)
@@ -216,16 +215,15 @@ class NDTViewTests(APITestCase):
                                    format='json')
         expected_response = 'Toronto'
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        ndt = NDT.objects.get(pk=1)
+        ndt = NDT.objects.get(download_rate=32)
         self.assertEqual(ndt.city, expected_response)
+        ndt.delete()
 
     def test_ndt_modelviewset_search_download_gte(self):
         response = self.client.get(self.ndt_url + '?download_rate__gte=400')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_response = 444
-        self.assertEqual(json.loads(response.content)[0]['download_rate'], expected_response)
-        expected_response = 877
-        self.assertEqual(json.loads(response.content)[1]['download_rate'], expected_response)
+        self.assertGreater(json.loads(response.content)[0]['download_rate'], 400)
+        self.assertGreater(json.loads(response.content)[1]['download_rate'], 400)
 
     def test_ndt_modelviewset_search_double_gte(self):
         response = self.client.get(self.ndt_url + '?download_rate__gte=400&upload_rate__gte=100')
@@ -276,15 +274,15 @@ class NDTViewTests(APITestCase):
         self.assertEqual(profile.service_type, 'BUSINESS')
 
     def test_ndt_profile_modelviewset_get_functionality_2(self):
-        response = self.client.get(self.ndt_profile_url)
+        response = self.client.get(self.ndt_profile_url_retrieve_1)
         expected_response = 'name'
-        self.assertEqual(json.loads(response.content)[0]['name'], expected_response)
+        self.assertEqual(json.loads(response.content)['name'], expected_response)
 
     def test_ndt_profile_modelviewset_get_inactive(self):
         self.ndt_profile.active = False
         self.ndt_profile.save()
         response = self.client.get(self.ndt_profile_url)
-        self.assertEqual(json.loads(response.content)[0]['name'], 'name2')
+        self.assertEqual(len(json.loads(response.content)), 2)
 
     def test_ndt_profile_modelviewset_get_unauthenticated(self):
         self.client.logout()
@@ -321,7 +319,7 @@ class NDTViewTests(APITestCase):
         self.client.login(email='name2@test.com', password='password')
         response = self.client.put(reverse('profile-detail', kwargs={'pk': self.ndt_profile.id}),
                                    {'name': 'Richard', 'service_type': 'PUBLIC', 'isp': self.isp.id}, format='json')
-        profile = NDTProfile.objects.get(pk=1)
+        profile = NDTProfile.objects.get(pk=self.ndt_profile.id)
         self.assertEqual(profile.name, 'name')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -400,21 +398,15 @@ class NDTViewTests(APITestCase):
 
 class ServerViewTests(APITestCase):
     def setUp(self):
-        self.country1 = Country.objects.create(name=u'Canada')
-        self.country1.save()
-        self.server1 = Server.objects.create(name='server1', url='server.canada.com', country=self.country1)
+        self.server1 = Server.objects.create(name='server1', url='server.canada.com')
         self.server1.save()
-        self.country2 = Country.objects.create(name=u'USA')
-        self.country2.save()
-        self.server2 = Server.objects.create(name='server2', url='server.america.com', country=self.country2)
+        self.server2 = Server.objects.create(name='server2', url='server.america.com')
         self.server2.save()
         self.server_url_list = self.server_url_create = reverse('server-list')
 
     def tearDown(self):
         self.server1.delete()
         self.server2.delete()
-        self.country1.delete()
-        self.country2.delete()
 
     def test_server_viewset_get_list(self):
         response = self.client.get(self.server_url_list)
@@ -425,8 +417,8 @@ class ServerViewTests(APITestCase):
 
 class Web100ViewTests(APITestCase):
     def setUp(self):
-        self.ndt = NDT.objects.create(download_rate=23, upload_rate=5, latency=3, latitude=123.35478,
-                                      longitude=140.5432, nominal_download_rate=25, nominal_upload_rate=6)
+        self.ndt = NDT.objects.create(download_rate=23, upload_rate=5, latency=3, location=Point(123.35478, 140.5432),
+                                      nominal_download_rate=25, nominal_upload_rate=6)
         self.ndt.save()
 
         self.web100 = Web100.objects.create(ndt=self.ndt, blob='{"blob_json": "hello_there"}')
@@ -445,34 +437,57 @@ class Web100ViewTests(APITestCase):
         allNDT = NDT.objects.all()
         response = self.client.post(self.web100_url_create, {'hash': '',
                                                              'blob': '{"blob_json": "create_new"}',
-                                                             'upload_rate': 12, 'download_rate': 23})
+                                                             'latency': 2.3,
+                                                             'upload_rate': 12,
+                                                             'download_rate': 23,
+                                                             'latitude': 43.6508783,
+                                                             'longitude': -79.3095302
+                                                             })
         self.assertIsNotNone(response.data['hash'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        web100 = Web100.objects.get(pk=2)
         newAllNDT = NDT.objects.all()
         self.assertNotEquals(allNDT, newAllNDT)
-        self.assertEqual(web100.blob, '{"blob_json": "create_new"}')
+        web100 = Web100.objects.all().count()
+        self.assertEqual(web100, 2)
+        Web100.objects.get(blob='{"blob_json": "create_new"}').delete()
 
     def test_web100_viewset_multi_create(self):
         response = self.client.post(self.web100_url_create, {'hash': '',
-                                                             'blob': '{"blob_json": "create_new"}',
-                                                             'upload_rate': 10, 'download_rate': 23})
+                                                             'blob': '{"blob_json": "create_w1"}',
+                                                             'latency': 3.4,
+                                                             'upload_rate': 10,
+                                                             'download_rate': 23,
+                                                             'latitude': 43.6508783,
+                                                             'longitude': -79.3095302
+                                                             })
         self.assertIsNotNone(response.data['hash'])
-        web1 = Web100.objects.get(pk=2)
-        self.assertEquals(web1.ndt.id, 2)
+        web1 = Web100.objects.all().count()
+        self.assertEquals(web1, 2)
         response = self.client.post(self.web100_url_create, {'hash': response.data['hash'],
-                                                             'blob': '{"blob_json": "create_new"}',
+                                                             'blob': '{"blob_json": "create_w2"}',
+                                                             'latency': 4.5,
                                                              'upload_rate': 11, 'download_rate': 24})
         self.assertIsNotNone(response.data['hash'])
-        web2 = Web100.objects.get(pk=3)
-        self.assertEquals(web2.ndt.id, 2)
+        web2 = Web100.objects.all().count()
+        self.assertEquals(web2, 3)
         response = self.client.post(self.web100_url_create, {'hash': response.data['hash'],
-                                                             'blob': '{"blob_json": "create_new"}',
+                                                             'blob': '{"blob_json": "create_w3"}',
+                                                             'latency': 3.4,
                                                              'upload_rate': 12, 'download_rate': 25})
         self.assertIsNotNone(response.data['hash'])
         ndt_object = NDT.objects.get(hash=response.data['hash'])
-        web3 = Web100.objects.get(pk=4)
-        self.assertEquals(web3.ndt.id, 2)
+        web3 = Web100.objects.all().count()
+        self.assertEquals(web3, 4)
         self.assertEquals(ndt_object.average_index, 3)
         self.assertEquals(ndt_object.upload_rate, 11)
         self.assertEquals(ndt_object.download_rate, 24)
+        w1 = Web100.objects.get(blob='{"blob_json": "create_w1"}')
+        w1.delete()
+        w2 = Web100.objects.get(blob='{"blob_json": "create_w2"}')
+        w2.delete()
+        w3 = Web100.objects.get(blob='{"blob_json": "create_w3"}')
+        w3.delete()
+
+
+
+

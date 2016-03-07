@@ -1,12 +1,27 @@
 {% load compress %}
 {% load staticfiles %}
-
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/app.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/angular-notify/angular-notify.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/angular-material/angular-material.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/jquery-ui/themes/excite-bike/jquery-ui.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'libs/assets/animate.css/animate.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'app/bower_components/font-awesome/css/font-awesome.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'libs/assets/simple-line-icons/css/simple-line-icons.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'app/bower_components/bootstrap/dist/css/bootstrap.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'app/bower_components/angularjs-toaster/toaster.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'app/bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
+  <link rel="stylesheet" href="{% static 'app/bower_components/c3/c3.css' %}">
+  <link rel="stylesheet" href="{% static 'app/bower_components/bootstrap-select/dist/css/bootstrap-select.css' %}">
+  <link rel="stylesheet" href="{% static 'app/bower_components/angucomplete-alt/angucomplete-alt.css' %}">
+  <link rel="stylesheet" href="{% static 'src/css/font.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'src/css/fonts.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'src/css/app.css' %}" type="text/css" />
+
+  {% if LANGUAGE_BIDI %}
+  <link rel="stylesheet" href="{% static 'app/bower_components/bootstrap-rtl/dist/css/bootstrap-rtl.css' %}">
+  <link rel="stylesheet" href="{% static 'src/css/app.rtl.css' %}" type="text/css" />
+  {% endif %}
+
+
 {% endcompress %}

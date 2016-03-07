@@ -1,0 +1,6 @@
+{% load compress %}
+{% load staticfiles %}
+
+{% compress js %}
+    <script type="text/javascript" src="{% static 'build/js/app.js' %}"></script>
+{% endcompress %}

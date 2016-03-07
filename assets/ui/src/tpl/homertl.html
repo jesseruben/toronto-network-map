@@ -1,0 +1,294 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = true;
+  ">
+    <!-- main -->
+    <div class="col"  ng-controller="SpeedtestController as vm">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md ng-right">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black" translate="home.MOTO"></h1>
+                    <small class="text-muted" translate="home.MOTO_SMALL"></small>
+                </div>
+                <div class="col-sm-6 text-right hidden-xs">
+                    <div class="inline m-r text-left">
+                        <div class="m-b-xs"> {{ vm.recordedTests | pNumber}} <span class="text-muted" translate="home.TESTS"></span></div>
+                        <div ng-init="d3_1=[ 106,108,110,105,110,109,105,104,107,109,105,100,105,102,101,99,98 ]"
+                             ui-jq="sparkline"
+                             ui-options="{{d3_1}}, {type:'bar', height:20, barWidth:5, barSpacing:1, barColor:'#dce5ec'}"
+                             class="sparkline inline">loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md ng-right">
+            <!-- stats -->
+            <div class="panel wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row row-sm text-center">
+                            <div class="col-md-4 col-md-offset-4">
+                                    <h4> {{ "home.test.TEST_SPEED_BUTTON" | translate }}
+                                        <a href="#"  popover-trigger="mouseenter" popover-placement="bottom" uib-popover="{{ 'home.how.STEP_1_DETAIL' | translate }}" popover-title="{{ 'general.HELP' | translate }}">
+                                        <i class="icon-info icon text-info m-l-xsm"></i>
+                            </a></h4>
+                            </div>
+
+                            <div class="col-md-4 col-md-offset-4">
+                                    <div id="svg" ng-click="vm.startTest()" class="vbox v-middle" ng-class="{disabled: vm.testInProgress}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-md-offset-2">
+                    <div class="panel wrapper">
+                        <h4 class="font-thin m-t-none m-b text-muted" style="color:black;"> {{ 'home.graph.SERVER_TEST_RESULTS' | translate }}
+                            <a href="" class="pull-right" popover-trigger="mouseenter" uib-popover="{{ 'home.graph.HELP' | translate }}" popover-title="{{ 'general.HELP' | translate }}">
+                                <i class="icon-info icon text-info m-l-xsm"></i>
+                            </a>
+                        </h4>
+                        <div ui-jq="plot" ui-refresh="vm.refreshSpline" ui-options="
+                              [
+                                { data: {{vm.instantUploadSpeed}}, label:'{{ 'home.graph.UPLOAD_SPEED' | translate }}', points: { show: true, radius: 1}, splines: { show: true, tension: 0.4, lineWidth: 1, fill: 0.8 } },
+                                { data: {{vm.instantDownloadSpeed}}, label:'{{ 'home.graph.DOWNLOAD_SPEED' | translate }}', points: { show: true, radius: 1}, splines: { show: true, tension: 0.4, lineWidth: 1, fill: 0.8 } }
+                              ],
+                              {
+                                colors: ['{{app.color.info}}', '{{app.color.primary}}'],
+                                series: { shadowSize: 3 },
+                                xaxis:{ axisLabel: '{{ 'home.graph.REQUEST_NUMBER' | translate }}', font: { color: '#a1a7ac' }, min:0, tickSize:1, tickDecimals:0 },
+                                yaxis:{ axisLabel: '({{ 'general.MBPS' | translate }})', position: 'left',font: { color: '#a1a7ac' }, max:50, min:0 },
+                                grid: { hoverable: true, clickable: true, borderWidth: 0},
+                                tooltip: true,
+                                tooltipOpts: { content: 'Measurment %x.1 = %y.4',  defaultTheme: false, shifts: { x: 10, y: -25 } }
+                              }
+                            " style="height:246px" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-md-offset-2">
+                    <p class="bg-info"> <strong style="margin: 3px;">{{ vm.status | pNumber}}</strong></p>
+                    <table class="table table-hover">
+                        <tr class="bg-primary lter">
+                            <td><strong translate="home.table.SERVER_NAME"></strong></td>
+                            <td><strong>{{ "general.UPLOAD_SPEED" | translate }} ({{ "general.MBPS" | translate }})</strong></td>
+                            <td><strong>{{ "general.DOWNLOAD_SPEED" | translate }} ({{ "general.MBPS" | translate }})</strong></td>
+                            <td><strong translate="general.LATENCY"></strong></td>
+                        </tr>
+                        <tr ng-repeat='server in vm.serverList'>
+                            <td>{{ server.name }}</td>
+                            <td ng-bind-html="server.uploadSpeed"></td>
+                            <td class="center-block" ng-bind-html="server.downloadSpeed"></td>
+                            <td ng-bind-html="server.latency"></td>
+                        </tr>
+                        <tr class="info" ng-show="vm.showAverage">
+                            <td><strong translate="home.table.AVERAGE"></strong></td>
+                            <td>{{ vm.uploadAverage }}</td>
+                            <td>{{ vm.downloadAverage }}</td>
+                            <td>{{ vm.latencyAverage }}</td>
+                        </tr>
+                    </table>
+                </div>
+                </div>
+            </div>
+            <!-- / stats -->
+
+            <!-- service -->
+            <div class="panel wrapper" ng-show="false">
+                <div class="row">
+                    <div class="col-md-6 b-r b-light no-border-xs">
+                        <h4 class="font-thin m-t-none m-b-md" translate="home.how.MEASUREMENTS_HOW"></h4>
+                        <div class="m-b col-lg-4 col-md-6">
+                            <div class="m-b">
+                                <span class="label text-base bg-warning pos-rlt m-r"><i class="arrow arrow-warning"></i><button class="label-button" ng-click="vm.activeHelp=1;">{{ 'home.how.STEP_1' | translate }}</button></span>
+                            </div>
+                            <div class="m-b">
+                                <span class="label text-base bg-info pos-rlt m-r"><i class="arrow arrow-info"></i><button class="label-button" ng-click="vm.activeHelp=2;">{{ 'home.how.STEP_2' | translate }}</button></span>
+                            </div>
+                            <div class="m-b">
+                                <span class="label text-base bg-primary pos-rlt m-r"><i class="arrow arrow-primary"></i><button class="label-button" ng-click="vm.activeHelp=3;">{{ 'home.how.STEP_3' | translate }}</button></span>
+                            </div>
+                            <div class="m-b">
+                                <span class="label text-base bg-light pos-rlt m-r"><i class="arrow arrow-light"></i><button class="label-button" ng-click="vm.activeHelp=4;">{{ 'home.how.STEP_4' | translate }}</button></span>
+                            </div>
+                        </div>
+                        <div class="m-b col-lg-6 col-md-6">
+                            <div class="more-info-container">
+                                <p ng-if="vm.activeHelp==1;" class="more-info">{{ 'home.how.STEP_1_DETAIL' | translate }}<a href="" style="color:skyblue;">{{ 'home.how.LEARN_MORE' | translate }}</a></p>
+                                <p ng-if="vm.activeHelp==2;" class="more-info">{{ 'home.how.STEP_2_DETAIL' | translate }}<a href="" style="color:skyblue;">{{ 'home.how.LEARN_MORE' | translate }}</a></p>
+                                <p ng-if="vm.activeHelp==3;" class="more-info">{{ 'home.how.STEP_3_DETAIL' | translate }}<a href="" style="color:skyblue;">{{ 'home.how.LEARN_MORE' | translate }}</a></p>
+                                <p ng-if="vm.activeHelp==4;" class="more-info">{{ 'home.how.STEP_4_DETAIL' | translate }}<a href="" style="color:skyblue;">{{ 'home.how.LEARN_MORE' | translate }}</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- / service -->
+
+        </div>
+    </div>
+    <!-- / main -->
+    <!-- right col -->
+    <div class="col w-md bg-white-only b-l bg-auto no-border-xs" style="margin-top: 20px;">
+        <div class="b-b wrapper-md nava">
+            <h1 class="m-n font-thin h3" translate="home.report.SERVICE_REPORT"></h1>
+        </div>
+        <div ng-controller="ReportController as vm" ng-submit="vm.sendReport()">
+            <uib-tabset class="tab-container" ng-hide="vm.submitted" ng-init="steps={percent:20, step1:true, step2:false, step3:false}">
+                <uib-tab heading="{{ 'home.report.STEP_1_HEADING' | translate }}" active="steps.step1" select="steps.percent=10">
+                    <uib-progressbar value="steps.percent" class="progress-xs" type="success"></uib-progressbar>
+                    <form role="form" novalidate name="reportForm">
+                        <hr>
+                        <h4 translate="home.report.SERVICE_TYPE"></h4>
+                        <div class="row text-center">
+                            <div class="col-sm-4">
+                                <input id="service_home" ng-model="vm.service_type" name="HOME" type="radio" class="with-font home" value="HOME" />
+                                <label for="service_home" translate="home.report.HOME"></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input id="service_business" ng-model="vm.service_type" name="BUSINESS" type="radio" class="with-font business" value="BUSINESS" />
+                                <label for="service_business" translate="home.report.BUSINESS"></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input id="service_public" ng-model="vm.service_type" name="PUBLIC" type="radio" class="with-font public" value="PUBLIC" />
+                                <label for="service_public" translate="home.report.PUBLIC"></label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <md-input-container flex>
+                                <label translate="home.report.NOMINAL_DOWNLOAD_SPEED"></label>
+                                <div class="row">
+                                    <select class="form-control col-md-3 col-md-offset-1 pull-left" ng-model="vm.nominal_download_metric">
+                                        <option value="kb">Kb</option>
+                                        <option value="mb" selected="selected">Mb</option>
+                                    </select>
+                                    <input type="number" class="form-control col-md-7" dir="ltr" ng-model="vm.nominal_download_rate"/>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <md-input-container flex>
+                                <label translate="home.report.NOMINAL_UPLOAD_SPEED"></label>
+                                <div class="row">
+                                    <select class="form-control col-md-3 col-md-offset-1 pull-left" ng-model="vm.nominal_upload_metric">
+                                        <option value="kb">Kb</option>
+                                        <option value="mb" selected="selected">Mb</option>
+                                    </select>
+                                    <input type="number" class="form-control col-md-7" dir="ltr" ng-model="vm.nominal_upload_rate"/>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <md-input-container flex>
+                                <label translate="home.report.NOMINAL_BANDWIDTH"></label>
+                                <div class="row">
+                                    <select class="form-control col-md-3 col-md-offset-1 pull-left" ng-model="vm.nominal_bandwidth_metric">
+                                        <option value="mb" selected="selected">Mb</option>
+                                        <option value="gb">GB</option>
+                                    </select>
+                                    <input type="number" class="form-control col-md-7" dir="ltr" ng-model="vm.nominal_bandwidth"/>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <hr>
+                        <div>
+                            <label translate="home.report.PROMOTION"></label>
+                            <label class="i-switch pull-right">
+                                <input type="checkbox" ng-model="vm.promotion" checked>
+                                <i dir="ltr"></i>
+                            </label>
+                        </div>
+                        <hr>
+                        <div>
+                            <label translate="home.report.VPN"></label>
+                            <label class="i-switch pull-right">
+                                <input type="checkbox" ng-model="vm.vpn" checked>
+                                <i dir="ltr"></i>
+                            </label>
+                        </div>
+                        <hr>
+                        <div>
+                            <label translate="home.report.CONTRACT"></label>
+                            <label class="i-switch pull-right">
+                                <input type="checkbox" ng-model="vm.contract" checked>
+                                <i dir="ltr"></i>
+                            </label>
+                        </div>
+                        <hr>
+                        <button type="button" ng-disabled="step1.$invalid" class="btn btn-default btn-rounded pull-right" ng-click="steps.step2=true">{{ 'home.report.NEXT' | translate }}</button>
+                    </form>
+                </uib-tab>
+                <uib-tab heading="{{ 'home.report.STEP_2_HEADING' | translate }}" disabled="step1.$invalid" active="steps.step2" select="steps.percent=30">
+                    <form name="step2" class="form-validation">
+                        <uib-progressbar value="steps.percent" class="progress-xs" type="success"></uib-progressbar>
+                        <div class="form-group hidden">
+                            <md-input-container flex>
+                                <label translate="home.report.COUNTRY"></label>
+                                <input type="text" class="form-control" id="report_price" ng-model="vm.country"/>
+                            </md-input-container>
+                        </div>
+                        <div class="form-group">
+                            <md-input-container flex>
+                                <label translate="home.report.PROVINCE"></label>
+                                <input type="text" class="form-control" id="report_price" ng-model="vm.province"/>
+                            </md-input-container>
+                        </div>
+                        <div class="form-group">
+                            <md-input-container flex>
+                                <label translate="home.report.CITY"></label>
+                                <input type="text" class="form-control" id="report_price" ng-model="vm.city"/>
+                            </md-input-container>
+                        </div>
+                        <button type="button" class="btn btn-default btn-rounded pull-left" ng-click="steps.step1=true">{{ 'home.report.PREV' | translate }}</button>
+                        <button type="button" ng-disabled="step2.$invalid" class="btn btn-default btn-rounded pull-right" ng-click="steps.step3=true">{{ 'home.report.NEXT' | translate }}</button>
+                    </form>
+                </uib-tab>
+                <uib-tab heading="{{ 'home.report.STEP_3_HEADING' | translate }}" disabled="step2.$invalid" active="steps.step3" select="steps.percent=80">
+                    <form name="step3" class="form-validation">
+                        <uib-progressbar value="steps.percent" class="progress-xs" type="success"></uib-progressbar>
+                        <div class="form-group has-feedback">
+                            <label translate="home.report.ISP" style="font-weight:normal;"></label>
+                             <div angucomplete-alt id="report_isps" input-name="report_isp" placeholder="{{ 'home.report.SEARCH_ISP' | translate }}" maxlength="50" pause="100"
+                                      selected-object="vm.isp" local-data="vm.isps" search-fields="name" title-field="name"
+                                      minlength="1" override-suggestions="true" input-class="form-control"
+                                  match-class="text-info" text-no-results="{{ 'home.report.NO_RESULTS' | translate }}"
+                                  text-searching="{{ 'home.report.SEARCHING' | translate }}">
+                             </div>
+                        </div>
+                        <hr>
+                        <div>
+                            <label translate="home.report.OVERALL_SATISFACTION" style="font-weight:normal;"></label>
+                            <uib-rating class="pull-right" ng-model="vm.rate_overall" max="vm.ratingMax" on-hover="vm.hoveringOver(value, overall)" on-leave="overStar = null"></uib-rating>
+                        </div>
+                        <hr>
+                        <div>
+                            <label translate="home.report.CUSTOMER_SERVICE" style="font-weight:normal;"></label>
+                            <uib-rating class="pull-right" ng-model="vm.rate_customerService" max="vm.ratingMax" on-hover="hoveringOver(value, customerService)" on-leave="overStar = null"></uib-rating>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <md-input-container flex>
+                                <label translate="home.report.PRICE"></label>
+                                <input type="text" class="form-control" id="report_price" ng-model="vm.price" placeholder="{{ 'general.CURRENCY' | translate }}"/>
+                            </md-input-container>
+                        </div>
+                        <hr>
+                        <button type="button" class="btn btn-default btn-rounded pull-left" ng-click="steps.step2=true">{{ 'home.report.PREV' | translate }}</button>
+                        <button type="submit" class="btn btn-default btn-rounded pull-right" ng-click="steps.percent=100">{{ 'home.report.SUBMIT' | translate }}</button>
+                    </form>
+                </uib-tab>
+            </uib-tabset>
+            <div ng-if="vm.submitted" style="margin-left: 10px; margin-right: 10px;">
+                <h3 translate="home.report.THANKYOU"></h3>
+                <p translate="home.report.SUCCESS_MESSAGE"></p>
+                <button class="btn btn-md" ng-click="vm.submitted=false;">{{ 'home.report.SUBMIT_ANOTHER_REPORT' | translate }}</button>
+            </div>
+        </div>
+    </div>
+    <!-- / right col -->
+</div>
+

@@ -1,4 +1,4 @@
-# Toronto Network Map
+# [Toronto Network Map] [docs]
 Toronto network map is a portal for [M-LAB](http://www.measurementlab.net/) NDT test which focuses on
 mapping speed and quality of the Internet in Toronto.
 
@@ -35,3 +35,6 @@ This is our team's side project and we believe we are going to publicly launch t
 want to contribute to this project please get in touch with us or open a pull request so we can review your code before
 putting it into our development branches. 
 
+
+## Install GEOIP globally with the following command
+brew install geoip

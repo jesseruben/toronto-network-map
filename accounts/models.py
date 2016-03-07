@@ -51,7 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Last time user got update'))
     notifications = models.IntegerField(default=0, verbose_name=_('Number of new notifications'))
     objects = UserManager()
-    log_guid = models.CharField(max_length=100, unique=True, default=_create_hash,
+    log_guid = models.TextField(max_length=512, unique=True, default=_create_hash,
                                 verbose_name=_('Globally Unique Identifier (GUID) for logging purposes'))
 
     USERNAME_FIELD = 'email'
@@ -78,6 +78,6 @@ class UserUID(models.Model):
         ('activation', _('User Activation'))
     )
     user = models.ForeignKey(User, verbose_name=_('User'))
-    guid = models.CharField(unique=True, max_length=100, verbose_name=_('Globally Unique Identifier (GUID)'))
+    guid = models.TextField(unique=True, max_length=512, verbose_name=_('Globally Unique Identifier (GUID)'))
     expiration_date = models.DateTimeField(default=timezone.now, verbose_name=_('Expiration Date'))
-    type = models.CharField(choices=TYPE, default='forgotPassword', max_length=1, verbose_name=_('Type'))
+    type = models.CharField(choices=TYPE, default='forgotPassword', max_length=50, verbose_name=_('Type'))

@@ -1,6 +1,7 @@
 import django_filters as filters
 from .models import NDTProfile, NDT
 
+
 class NDTProfileFilter(filters.FilterSet):
     class Meta:
         model = NDTProfile
@@ -10,6 +11,7 @@ class NDTProfileFilter(filters.FilterSet):
         the 'icontains' means you can search (case insensitive) by appending to url: ?name__icontains=searchterm
         '''
         fields = {'name': ['exact', 'icontains'], 'service_type': ['exact', 'icontains']}
+
 
 class NDTFilter(filters.FilterSet):
     class Meta:

@@ -1,0 +1,98 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm ng-right">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black"><a ui-sref="app.isps">{{ "ispList.ISPS_NEAR_YOU" | translate }}</a> / {{ vm.isp.name }}</h1>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- Basic ISP information -->
+            <div class="panel wrapper">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img ng-if="!vm.isp.image" ng-src="static/src/img/placeholder.jpg" alt="{{ isp.name }}" style="width:100%;">
+                        <img ng-if="vm.isp.image" ng-src="/media/{{vm.isp.image}}" alt="{{ isp.name }}" style="width:100%;">
+                    </div>
+                    <div class="col-md-10">
+                        <i class="fa fa-info text-info m-r-sm pull-right"></i>
+                        <h2>{{vm.isp.name}}</h2>
+                        <p>
+                            <a href="{{ vm.isp.website }}" target="_blank">
+                                <i class="fa fa-link"></i> {{ vm.isp.website }}
+                            </a>
+                        </p>
+                        <p>
+                            <i class="fa fa-phone"></i> <a ng-href="tel:{{ vm.isp.phone }}">{{ vm.isp.phone }}</a>
+                        </p>
+                        <p>
+                            <a ng-href="{{ vm.isp.facebook }}" style="margin-right: 5px;">
+                                <i class="fa fa-facebook-square fa-2x"></i>
+                            </a>
+                            <a ng-href="{{ vm.isp.twitter }}">
+                                <i class="fa fa-twitter-square fa-2x"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- / Basic Isp Information -->
+            <!-- plans -->
+            <div class="panel hbox hbox-auto-xs no-border" ng-if="vm.isp.plans.length!=0">
+                <div class="col wrapper">
+                    <i class="fa fa-money text-info m-r-sm pull-right"></i>
+                    <h3 class="font-thin m-t-none m-b-large text-primary-lt">{{ vm.isp.name }} {{ 'ispDetail.INTERNET_PLANS' | translate }}</h3>
+                    <div class="row no-gutter">
+                        <div ng-repeat="plan in vm.isp.plans" class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="panel b-a">
+                                <div class="panel-heading wrapper-xs bg-primary no-border">
+                                </div>
+                                <div class="wrapper text-center b-b b-light">
+                                    <h4 class="text-u-c m-b-none">{{ plan.name }}</h4>
+                                    <h2 class="m-t-none">
+                                        <sup class="pos-rlt isp-price" style="top:-12px">{{ "general.CURRENCY" | translate }}</sup>
+                                        <span class="text-2x text-lt">{{ plan.price | number:0 }}</span>
+                                        <span class="text-xs" translate="ispDetail.MO"></span>
+                                    </h2>
+                                </div>
+                                <ul class="list-group text-center no-borders m-t-sm">
+                                    <li class="list-group-item">
+                                        <i class="icon-arrow-down text-success m-r-xs"></i> {{ 'ispDetail.DOWNLOAD_SPEED' | translate }} {{ plan.download_rate |  number:0}} {{ 'general.MBPS' | translate }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="icon-arrow-up text-success m-r-xs"></i> {{ 'ispDetail.UPLOAD_SPEED' | translate }} {{ plan.upload_rate |number:0}} {{ 'general.MBPS' | translate }}
+                                    </li>
+                                    <li class="list-group-item" ng-if="plan.bandwidth">
+                                        <i class="icon-speedometer text-success m-r-xs"></i>  {{ 'ispDetail.BANDWIDTH' | translate }} {{ plan.bandwidth_limit }} {{ 'general.GB' | translate }}
+                                    </li>
+                                    <li class="list-group-item" ng-if="plan.contract" dir="rtl">
+                                        <i class="icon-lock text-danger m-r-xs"></i>{{ 'ispDetail.CONTRACT_LENGTH' | translate }} {{ plan.contract_length}} {{ 'ispDetail.MONTHS_CONTRACT' | translate }}
+                                    </li>
+                                </ul>
+                                <div class="panel-footer text-center">
+                                    <a ng-href="{{ plan.link }}"  target="_blank" class="btn btn-primary font-bold m"> {{ 'ispDetail.CHECK' | translate }} {{ plan.name }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- / pnas -->
+        </div>
+    </div>
+    <!-- / main -->
+
+    <!-- right column -->
+    <div class="col w-md bg-white-only b-l bg-auto no-border-xs">
+        <div class="bg-light lter b-b wrapper-md">
+            <h1 class="m-n font-thin h3" translate="ispDetail.COMING_SOON"></h1>
+        </div>
+        <!-- / right column -->
+    </div>
+</div>
+

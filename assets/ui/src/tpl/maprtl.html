@@ -1,0 +1,128 @@
+<div class="container-fluid" style="margin-top: -20px;">
+    <div class="row ng-right" style="margin-top: 25px;">
+        <div class="col-lg-8" id="map" style="height: 100%;">
+            <ui-gmap-google-map center="vm.map.center" zoom="vm.map.options.zoom" draggable="vm.map.options.draggable"
+                                options="vm.map.options" events="vm.map.events" control="googlemap">
+                <ui-gmap-markers models="vm.markers" idkey="vm.markers.id" coords="'self'" events="vm.markers.events"
+                                 click="onClick()" icon='{url:"static/src/img/circle.png" }'>
+                </ui-gmap-markers>
+            </ui-gmap-google-map>
+        </div>
+        <div class="col-lg-4" id="charts">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading font-bold">{{ 'map.pieChart.TITLE' | translate }}
+                            <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.pieChart.HELP' | translate }}" popover-title="{{ 'general.HELP' | translate }}" class="pull-right">
+                                <i class="icon-info icon text-info m-l-xsm"></i>
+                            </a>
+                        </div>
+                        <div class="panel-body text-center" id="pieChart" style="height: 160px; padding: 0px;" dir="ltr">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading font-bold">{{ 'map.barChart.TITLE' | translate }}
+                            <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.barChart.HELP' | translate }}" popover-title="{{ 'general.HELP' | translate }}" class="pull-right">
+                                <i class="icon-info icon text-info m-l-xsm" dir="rtl" style="direction: rtl;"></i>
+                            </a>
+                        </div>
+                        <div class="panel-body text-center" id="barChart" style="height: 160px; padding: 0px;" dir="ltr">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+               <div class="panel-heading font-bold">{{ 'map.uploadHistogram.TITLE' | translate }}
+                    <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.uploadHistogram.HELP' | translate }}" popover-title="{{ 'general.HELP' | translate }}" class="pull-right">
+                        <i class="icon-info icon text-info m-l-xsm"></i>
+                    </a>
+               </div>
+               <div class="wrapper m-t-n-xxs" id="uploadHistogram" style="height:175px; padding: 0px;" dir="ltr">
+               </div>
+            </div>
+            <div class="panel panel-default">
+               <div class="panel-heading font-bold">{{ 'map.downloadHistogram.TITLE' | translate }}
+                    <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.downloadHistogram.HELP' | translate }}" popover-title="{{ 'general.HELP' | translate }}" class="pull-right">
+                        <i class="icon-info icon text-info m-l-xsm"></i>
+                    </a>
+               </div>
+               <div class="wrapper m-t-n-xxs" id="downloadHistogram" style="height:175px; padding: 0px;" dir="ltr">
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default filter-panel">
+    <div class="panel-body bg-light lter filter-panel-body">
+        <div class="row">  <!-- total number -->
+            <div class="col-md-4">
+                <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.filter.TOTAL_POPOVER' | translate }}" popover-title="{{ 'general.HELP' | translate }}">
+                    <i class="icon-layers text-success m-r-xs"></i>
+                </a></div>
+            <div class="col-md-8">
+                {{ vm.totalNumber }} <span translate="map.filter.TESTS"></span>
+            </div>
+        </div>  <!-- total number -->
+
+        <div class="row"> <!-- download -->
+            <div class="col-md-4">
+                <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.filter.DOWNLOAD_RATE_POPOVER' | translate }}" popover-title="{{ 'general.HELP' | translate }}">
+                    <i class="icon-arrow-down text-success m-r-xs"></i>
+                </a></div>
+            <div class="col-md-8">
+                {{ vm.averageDownload | number:1 }} {{ "general.MBPS" | translate }}
+            </div>
+        </div> <!-- download -->
+
+        <div class="row"> <!-- upload -->
+            <div class="col-md-4">
+                <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.filter.UPLOAD_RATE_POPOVER' | translate }}" popover-title="{{ 'general.HELP' | translate }}">
+                    <i class="icon-arrow-up text-success m-r-xs"></i>
+                </a>
+            </div>
+            <div class="col-md-8">
+                {{ vm.averageUpload | number:1 }} {{ "general.MBPS" | translate }}
+            </div>
+        </div> <!-- upload -->
+
+        <div class="row">
+            <div class="col-md-4">
+                <a popover-trigger="mouseenter" popover-placement="auto bottom-right" uib-popover="{{ 'map.filter.PRICE_POPOVER' | translate }}" popover-title="{{ 'general.HELP' | translate }}">
+                    <i class="icon-basket text-success m-r-xs"></i>
+                </a>
+            </div>
+            <div class="col-md-8">
+                {{ vm.averagePrice | number:0}} {{ "general.CURRENCY" | translate }}
+            </div>
+        </div>
+        <h5>{{ 'map.filter.UPLOAD_RATE' | translate }} <small>({{ vm.uploadSlider[0]}} {{ "general.TO" | translate }} {{ vm.uploadSlider[1]}} {{ "general.MBPS" | translate }})</small>
+        </h5>
+
+        <div class="ui-slider" ui-slider="{range: true}" step="5" min="0" max="100"
+             ng-model="vm.uploadSlider"></div>
+        <br>
+
+        <h5>{{ 'map.filter.DOWNLOAD_RATE' | translate }} <small>({{ vm.downloadSlider[0]}} {{ "general.TO" | translate }} {{ vm.downloadSlider[1]}} {{ "general.MBPS" | translate }})</small></h5>
+        <div class="ui-slider" ui-slider="{range: true}" step="5" min="0" max="100"
+             ng-model="vm.downloadSlider"></div>
+        <br>
+
+        <h5>{{ 'map.filter.PRICE' | translate }} <small>({{ vm.priceSlider[0]}} {{ "general.TO" | translate }} {{ vm.priceSlider[1]}} {{ "general.CURRENCY" | translate }})</small>
+        </h5>
+        <div class="ui-slider" ui-slider="{range: true}" step="10000" min="0" max="300000"
+             ng-model="vm.priceSlider"></div>
+        <br>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="vm.nullIsp"> <span style="font-size: 9pt;">{{ 'map.filter.NULLISP' | translate }}</span>
+            </label>
+          </div>
+        <h5>{{ 'map.filter.ISPS' | translate }}</h5>
+        <div ng-dropdown-multiselect="" options="vm.ispList" selected-model="vm.ispFilterList"
+             extra-settings="vm.ispFilterSettings"
+             translation-texts="vm.ispFilterTranslations"
+             events="vm.ispFilterEvents"></div>
+    </div>
+</div>

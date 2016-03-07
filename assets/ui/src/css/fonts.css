@@ -1,0 +1,87 @@
+
+@font-face {
+    font-family: koodak;
+    src: url("../fonts/koodak.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: nazli;
+    src: url("../fonts/nazli.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: nazlib;
+    src: url("../fonts/nazlib.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: roya;
+    src: url("../fonts/roya.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: royab;
+    src: url("../fonts/royab.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: terafik;
+    src: url("../fonts/terafik.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: terafikb;
+    src: url("../fonts/terafikb.ttf") /* TTF file for CSS3 browsers */
+}
+@font-face {
+    font-family: titr;
+    src: url("../fonts/titr.ttf") /* TTF file for CSS3 browsers */
+}
+
+@font-face{
+    font-family:RoyaBold;
+    font-style:normal;src:url("../fonts/Roya-Bold.eot");
+    src:url("../fonts/Roya-Bold.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roya-Bold.woff") format("woff"),
+    url("../fonts/Roya-Bold.ttf") format("truetype")
+}
+
+@font-face{
+    font-family:traffic;
+    font-style:normal;src:url("../fonts/BTraffic.eot");
+    src:url("../fonts/BTraffic.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/BTraffic.woff") format("woff"),
+    url("../fonts/BTraffic.ttf") format("truetype")
+}
+
+@font-face{
+    font-family:trafficb;
+    font-style:normal;src:url("../fonts/BTrafficBold.eot");
+    src:url("../fonts/BTrafficBold.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/BTrafficBold.woff") format("woff"),
+    url("../fonts/BTrafficBold.ttf") format("truetype")
+}
+
+.trafficb {
+    font-family: trafficb, Impact, "Arial Black", sans-serif;
+}
+.traffic {
+    font-family: traffic, Impact, "Arial Black", sans-serif;
+}
+.nazli {
+    font-family: nazli, Impact, "Arial Black", sans-serif;
+}
+.nazlib {
+    font-family: nazlib, Impact, "Arial Black", sans-serif;
+}
+.roya {
+    font-family: roya, Impact, "Arial Black", sans-serif;
+}
+.royab {
+    font-family: royab, 'Montserrat', sans-serif;
+}
+.terafik {
+    font-family: terafik, Impact, "Arial Black", sans-serif;
+}
+.terafikb {
+    font-family: terafikb, Impact, "Arial Black", sans-serif;
+}
+.titr {
+    font-family: titr, Impact, "Arial Black", sans-serif;
+}
+
+

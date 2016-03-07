@@ -1,0 +1,266 @@
+{
+    "header" : {
+      "navbar" : {
+        "ACCOUNT": "Account",
+        "REGISTER": "Register",
+        "LOGIN": "Login",
+        "LOGOUT": "Logout",
+        "UPDATE_PASSWORD": "Update Password"
+      }
+    },
+    "authModal": {
+      "LOGIN_TITLE": "Login to your account",
+      "EMAIL": "Email",
+      "LOG_IN": "Log in",
+      "FORGOT_PASSWORD": "Forgot password?",
+      "DONT_HAVE_ACCOUNT": "Do not have an account?",
+      "CREATE_ACCOUNT": "Create an account",
+      "PASSWORD": "Password",
+      "SIGNUP_TITLE": "Sign up to get access to more features",
+      "USERNAME": "Username",
+      "CONFIRM_PASSWORD": "Confirm password",
+      "SIGNUP": "Sign up",
+      "AGREE_THE": "Agree the",
+      "TERMS_AND_POLICY": "terms and policy",
+      "ALREADY_HAVE_ACCOUNT": "Already have an account?",
+      "INPUT_EMAIL_RESET_PASSWORD": "Input your email to reset your password",
+      "RESET_LINK_SENT": "A reset link sent to your email address.",
+      "SEND": "Send",
+      "SIGN_IN": "Sign in"
+    },
+    "setPassword": {
+      "SET_YOUR_PASS": "Set your new password",
+      "NEW_PASSWORD": "New Password",
+      "CONFIRM_PASSWORD": "Confirm Password",
+      "SUBMIT": "Submit"
+    },
+    "aside" : {
+      "nav" : {
+        "components" : {
+          "MAP": "Map",
+          "ISPS": "ISPs",
+          "CONTACT": "Contact",
+          "HOME": "Home",
+          "ABOUT": "About"
+        }
+      }
+    },
+    "errors":{
+      "ERROR_ALPHA_NUMERIC": "You can only use a-z, A-Z and 0-9 for this field",
+      "ERROR_REQUIRED": "This field is required",
+      "ERROR_PASSWORD_MATCH": "Passwords do not match.",
+      "ERROR_PASSWORD_REGEX": "Password should contain at least one number, one small letter and one capital letter.",
+      "ERROR_EMAIL": "Please enter a valid email address.",
+      "ERROR_SHORT": "Too short! The minimum number of characters for this field is: ",
+      "ERROR": "Error",
+      "ERROR_TEST_RESULT_LOAD": "There was an error loading the map. Refreshing the page might help!",
+      "ERROR_LONG": "Too long! The maximum number of character for this fiels is:  ",
+      "WARNING": "Warning",
+      "SERVER_ERROR": "Server Error",
+      "DATA_NOT_SUBMITTED": "Unfortunately your data could not be saved. Please try again.",
+      "INTERNAL_SERVER_ERROR": "Internal server error. Please try again.",
+      "INVALID_USER_INFO": "Invalid user informaiton. Please try again",
+      "LOGIN_SUCCESSFUL": "You have successfully logged into the application",
+      "CAN_NOT_LOGIN": "You cannot login to the system with this user information",
+      "COMBINATION_INVALID": "Username or password is not correct.",
+      "PASSWORD_UPDATE_SUCCESS": "Password was successfully updated.",
+      "CAN_NOT_UPDATE_PASSWORD": "We cannot update your password with the information provided.",
+      "IF_VALID_AN_EMAIL_SENT": "If the provided email exists in our system, we will send you an email with instruction.",
+      "USER_NOT_FOUND": "The user was not found.",
+      "PASSWORD_MISMATCH": "The passwords do not match.",
+      "ACCOUNT_CREATED": "You have successfully created an accout",
+      "SUCCESS": "Success",
+      "LOGOUT_SUCCESS": "You have sueccessfully logged out of the system."
+    },
+    "general": {
+      "MENU": "Menu",
+      "MBPS": "Mbps",
+      "KBPS": "Kbps",
+      "GB": "GB",
+      "LATENCY": "Latency",
+      "DOWNLOAD_SPEED": "Download Speed",
+      "UPLOAD_SPEED": "Upload Speed",
+      "TO": "to",
+      "CURRENCY": "CAD",
+      "HELP": "More information"
+    },
+    "home":{
+        "MOTO": "Test your Internet Service Provider(ISP) promises",
+        "MOTO_SMALL": "Upload/Download Speed and beyond",
+        "TESTS": "Tests",
+        "test": {
+            "TEST_SPEED_BUTTON": "Test your speed",
+            "TEST_IN_PROGRESS": "Test in progress",
+            "TEST_AGAIN": "Test again",
+            "DONE": "Done",
+            "READY_TO_TEST": "Test your speed",
+            "CONNECTING_TO": "Connecting to:",
+            "PREPARING_DOWNLOAD": "Preparing Download",
+            "PREPARING_UPLOAD": "Preparing Upload",
+            "MEASURING_DOWNLOAD": "Measuring Download",
+            "MEASURING_UPLOAD": "Measuring Upload",
+            "FINISHED_DOWNLOAD": "Finished Download",
+            "FINISHED_UPLOAD": "Finished Upload",
+            "PREPARING_METADATA": "Preparing Metadata",
+            "SENDING_METADATA": "Sending Metadata",
+            "FINISHED_METADATA": "Finished Metadata",
+            "RUN_AGAIN": "Run Again",
+            "UPLOAD": "Upload",
+            "DOWNLOAD": "Download",
+            "MBPS": "Mbps"
+        },
+        "report":{
+            "SERVICE_REPORT": "Service Report",
+            "SERVICE_TYPE": "Service Type",
+            "NOMINAL_BANDWIDTH": "Nominal Bandwidth",
+            "NOMINAL_DOWNLOAD_SPEED": "Nominal Download Speed",
+            "NOMINAL_UPLOAD_SPEED": "Nominal Upload Speed",
+            "OVERALL_SATISFACTION": "Overall Satisfaction",
+            "CUSTOMER_SERVICE": "Customer Service",
+            "PROMOTION": "Promotion",
+            "VPN": "VPN",
+            "PRICE": "Price",
+            "SUBMIT": "Submit",
+            "HOME": "Home",
+            "BUSINESS": "Business",
+            "PUBLIC": "Public",
+            "CONTRACT": "Contract",
+            "COUNTRY": "Country",
+            "PROVINCE": "Province",
+            "CITY": "City",
+            "NEXT": "Next",
+            "PREV": "Prev",
+            "THANKYOU": "Thank You!",
+            "SUCCESS_MESSAGE": " We have stored your feedback and it will show up in our analysis shortly.",
+            "SUBMIT_ANOTHER_REPORT": "Submit another report",
+            "STEP_1_HEADING": "Step 1",
+            "STEP_2_HEADING": "Step 2",
+            "STEP_3_HEADING": "Step 3",
+            "ISP": "ISP",
+            "SEARCH_ISP": "Search for your ISP",
+            "NO_RESULTS": "No Results",
+            "SEARCHING": "Searching",
+            "32k": "32 Kbps",
+            "64k": "64 Kbps",
+            "128k": "128 Kbps",
+            "256k": "256 Kbps",
+            "512k": "512 Kbps",
+            "1M": "1 Mbps",
+            "2M": "2 Mbps",
+            "3-5M": "3-5 Mbps",
+            "6-9M": "6-9 Mbps",
+            "10M": "10 Mbps"
+        },
+        "graph": {
+            "SERVER_TEST_RESULTS": "Server Test Results",
+            "UPLOAD_SPEED": "Upload Speed",
+            "DOWNLOAD_SPEED": "Download Speed",
+            "MEASUREMENT": "Measurement",
+            "REQUEST_NUMBER": "Request",
+            "RATE": "Rate",
+            "HELP": "This graph presents instantenous upload and download rate of your connection agains diffrent test servers. Usually closer server yeilds to higher speed."
+        },
+        "how":{
+            "MEASUREMENTS_HOW": "Measurements, How?",
+            "STEP_1": "Step 1: Find Servers",
+            "STEP_2": "Step 2: Measurements",
+            "STEP_3": "Step 3: Aggregations",
+            "STEP_4": "Step 4: Store/Analyze",
+            "STEP_1_DETAIL": "First step is to find the closest NDT servers to your location. Generally this is done with a call to AppEngine; a service owned by Google. But this service is blocked in a few countries...",
+            "STEP_2_DETAIL": "In the second step, multiple calls are sent to each of the servers to measure upload and download speed as well as many other metrics regarding the quality of the service...",
+            "STEP_3_DETAIL": "When the results of all three servers are received, an average of the upload and download speed and latency will be shown and stored and the calclauted results of the test..",
+            "STEP_4_DETAIL": "Every test result is saved in a large database with all the metrics regarding the location, price, ISP and customer reviews, this informaiton is later used in the analysis...",
+            "LEARN_MORE": "Learn more"
+        },
+        "table":{
+            "STATUS": "Status:",
+            "SERVER_NAME": "Server Name",
+            "LATENCY": "Latency",
+            "DOWNLOAD_SPEED": "Download Speed",
+            "UPLOAD_SPEED": "Upload Speed",
+            "AVERAGE": "Average"
+        },
+        "regional":{
+            "TITLE": "Average Regional Speed",
+            "TITLE_SMALL": "Service report of this year (updated 1 hour ago)",
+            "AVERAGE_UPLOAD_SPEED": "Average Upload Speed",
+            "AVERAGE_DOWNLOAD_SPEED": "Average Download Speed",
+            "TIME": "Time",
+            "RATE": "Rate"
+        }
+    },
+    "map":{
+      "filter":{
+        "UPLOAD_RATE": "Upload Rate",
+        "DOWNLOAD_RATE": "Download Rate",
+        "PRICE": "Price",
+        "MULTIPLE_ISP": "Filter Multiple ISPs",
+        "TOTAL_POPOVER": "Totoal Number of Tests",
+        "DOWNLOAD_RATE_POPOVER": "Average Download Speed",
+        "UPLOAD_RATE_POPOVER": "Average Upload Speed",
+        "PRICE_POPOVER": "Average Price",
+        "ISPS": "ISPs",
+        "SELECT": "select",
+        "CHECKED": "checked",
+        "NULLISP": "Show test with unknown ISPS",
+        "UNCHECK_ALL": "Uncheck All"
+      },
+      "pieChart":{
+        "TITLE": "Unfiltered Tests Rate",
+        "UNFILTERED": "Unfiltered",
+        "FILTERED": "Filtered",
+        "HELP": "This chart shows the percentage of filtered data versus total available data."
+      },
+      "barChart":{
+        "TITLE": "Unfiltered Test vs Total",
+        "UNFILTERED_TESTS": "Unfiltered Tests",
+        "TOTAL": "Total",
+        "HELP": "This chart shows you how many data are filtered with the bars on the map."
+      },
+      "uploadHistogram":{
+        "TITLE": "Upload Rates Histogram",
+        "UPLOAD_RATE": "Upload Rate",
+        "HELP": "This chart demonstrate the distribution of upload data on the map, use the filter bars on the map to see the results."
+      },
+      "downloadHistogram":{
+        "TITLE": "Download Rates Histogram",
+        "DOWNLOAD_RATE": "Download Rate",
+         "HELP": "This chart demonstrate the distribution of download data on the map, use the filter bars on the map to see the results."
+      }
+    },
+    "contact": {
+      "HEADING": "Contact Us",
+      "DESC": "For any inquiries regarding the platform setup and development, accuracy of analytics and reports or any issues feel free to contact us. One of our team members will get in touch with you as soon as possible.",
+      "SUBJECT": "Subject",
+      "YOUR_NAME": "Your Name",
+      "EMAIL_ADDRESS": "Email Address",
+      "YOUR_MESSAGE": "Your Message",
+      "SUCCESS":"Your message was sent successfully.",
+      "CONTACT_US": "Contact Us"
+    },
+    "ispList": {
+      "SUBMIT_REPORT": "Submit Report",
+      "ISPS_NEAR_YOU": "ISPs near you",
+      "SEARCH": "Search",
+      "ISP_LIST_HEADING": "List of ISPs in your region",
+      "SORT": "Sort",
+      "HIGHEST_RATING": "Highest Rating",
+      "LOWEST_RATING": "Lowest Rating"
+    },
+    "ispDetail": {
+      "INTERNET_PLANS": "Internet Plans",
+      "MO": "/ mo",
+      "COMING_SOON": "Coming soon",
+      "DOWNLOAD_SPEED": "Download Speed",
+      "UPLOAD_SPEED": "Upload Speed",
+      "BANDWIDTH": "Bandwidth",
+      "MONTHS_CONTRACT": "months contract",
+      "CONTRACT_LENGTH": "",
+      "CHECK": "Check",
+      "RECENT_REPORTS": "Recent Reports"
+    },
+    "faq": {
+      "FAQ": "Frequently Asked Question",
+      "ISSUE_GETTING_FAQ": "There was a problem pulling FAQ list from the server. Refreshing the page may help, or not!"
+    }
+}

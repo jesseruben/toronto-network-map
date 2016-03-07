@@ -1,0 +1,48 @@
+<!-- hbox layout -->
+<div class="hbox hbox-auto-xs bg-light ng-right" style="width: None;">
+    <!-- column search and filter -->
+    <div class="col w-md b-r border-xs">
+        <div class="wrapper" style="margin-bottom: 19px;">
+            <button ui-sref="app.home" class="pull-right btn-block btn-sm btn-info m-t-n-xs" translate="ispList.SUBMIT_REPORT"></button>
+        </div>
+        <div class="wrapper b-t m-t-xxs">
+            <div class="input-group">
+                <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
+                <input type="text" class="form-control input-sm" placeholder="{{ 'ispList.SEARCH' | translate }}" ng-model="query">
+            </div>
+            <div class="form-group">
+                <label class="control-label" translate="ispList.SORT"></label>
+                <select class="form-control m-b" id="select" ng-model="vm.orderProp"
+                        ng-options="option.name for option in vm.orderOptions">
+                </select>
+
+            </div>
+        </div>
+    </div>
+    <!-- /column  search and filter-->
+
+    <!-- column isps -->
+    <div class="col">
+        <div class="vbox">
+            <div class="wrapper b-l lt b-b m-b">
+                <div class="h4" translate="ispList.ISP_LIST_HEADING"></div>
+            </div>
+            <div class="row">
+                <div ng-repeat="isp in vm.isps | filter:query | orderBy:vm.orderProp.value" class="col-xs-6 col-sm-3 col-md-3 col-lg-2">
+                    <div class="thumbnail">
+                        <a ui-sref="app.isp({id:isp.id, name:isp.name})">
+                            <img ng-if="!isp.image" ng-src="static/src/img/placeholder.jpg" alt="{{ isp.name }}">
+                            <img ng-if="isp.image" ng-src="media/{{ isp.image }}" alt="{{ isp.name }}">
+                        </a>
+                        <div class="caption">
+                            <h4 class="tool-listing-header text-primary" style="height: 30px;max-height: 30px;"><a ui-sref="app.isp({id:isp.id, name:isp.name})">{{isp.name}}</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /column isps -->
+    </div>
+</div>
+<!-- /hbox layout -->
+

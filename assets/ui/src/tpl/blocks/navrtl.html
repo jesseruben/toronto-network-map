@@ -1,0 +1,91 @@
+<nav class="navbar">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header bg-black">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <i class="glyphicon glyphicon-align-justify"></i>
+        </button>
+        <a class="navbar-brand" href="/home">
+            <img alt="Brand" width="45" src="static/src/img/falogo.svg">
+        </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" nav-collapse="">
+        <ul class="nav navbar-nav">
+            <li ui-sref-active="auto">
+                <a ui-sref="app.home">
+                    <i class="glyphicon glyphicon-home visible-xs"></i>
+                    <span translate="aside.nav.components.HOME"></span>
+                </a>
+            </li>
+
+            <li ui-sref-active="auto">
+                <a ui-sref="app.map">
+                    <i class="glyphicon glyphicon-map-marker visible-xs"></i>
+                    <span translate="aside.nav.components.MAP"></span>
+                </a>
+            </li>
+
+            <li ui-sref-active="auto">
+                <a ui-sref="app.isps">
+                    <i class="glyphicon glyphicon glyphicon-globe icon text-info-dker visible-xs"></i>
+                    <span  translate="aside.nav.components.ISPS">Isps</span>
+                </a>
+            </li>
+
+            <li ui-sref-active="auto">
+                <a ui-sref="app.about">
+                    <i class="icon-question icon visible-xs"></i>
+                    <span translate="aside.nav.components.ABOUT"></span>
+                </a>
+            </li>
+
+            <li ui-sref-active="auto">
+                <a ui-sref="app.contact">
+                    <i class="glyphicon glyphicon-edit visible-xs"></i>
+                    <span translate="aside.nav.components.CONTACT"></span>
+                </a>
+            </li>
+            <li ui-sref-active="auto">
+                <a href="https://facebook.com/ispfy" target="_blank">
+                    <i class="fa fa-facebook"></i>
+                </a>
+            </li>
+            <li ui-sref-active="auto">
+                <a href="https://twitter.com/ispfy" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right hidden">
+            <li class="dropdown" uib-dropdown>
+                <a href class="dropdown-toggle clear" uib-dropdown-toggle>
+                    <span class="hidden-sm hidden-md" ng-if="currentUser">{{ currentUser.username }}</span>
+                    <span class="hidden-sm hidden-md" ng-if="!currentUser" translate="header.navbar.ACCOUNT"></span>
+                    <b class="caret"></b>
+                </a>
+                <!-- dropdown -->
+                <ul class="dropdown-menu animated fadeInRight w" ng-if="currentUser">
+                    <li>
+                        <a ui-sref="app.updatepassword">{{ 'header.navbar.UPDATE_PASSWORD' | translate }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a ng-click="logout()">{{ 'header.navbar.LOGOUT' | translate }}</a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu animated fadeInRight w" ng-if="!currentUser">
+                    <li>
+                        <a ng-click="register(1)" translate="header.navbar.REGISTER"></a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a ng-click="login(0)" translate="header.navbar.LOGIN"></a>
+                    </li>
+                </ul>
+                <!-- / dropdown -->
+            </li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>

@@ -2,13 +2,16 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+from django.conf import settings
 import NDT.models
+import django.contrib.gis.db.models.fields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('locations', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('isp', '0002_auto_20150917_1203'),
     ]
 
@@ -34,6 +37,7 @@ class Migration(migrations.Migration):
                 ('rating_general', models.PositiveSmallIntegerField(null=True, verbose_name=b'general rating', blank=True)),
                 ('hash', models.CharField(default=NDT.models._create_hash, unique=True, max_length=100, verbose_name=b'unique hash value used for UI identification')),
                 ('average_index', models.DecimalField(default=1, verbose_name=b'Number of test results contributing to the average', max_digits=5, decimal_places=2)),
+                ('country', models.ForeignKey(to='locations.Country', null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -41,8 +45,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=20)),
-                ('latitude', models.DecimalField(null=True, max_digits=8, decimal_places=5, blank=True)),
-                ('longitude', models.DecimalField(null=True, max_digits=8, decimal_places=5, blank=True)),
+                ('location', django.contrib.gis.db.models.fields.PointField(help_text=b'Represented as (longitude, latitude)', srid=4326, null=True, blank=True)),
                 ('nominal_download_rate', models.DecimalField(null=True, verbose_name=b'nominal download rate', max_digits=6, decimal_places=3, blank=True)),
                 ('nominal_upload_rate', models.DecimalField(null=True, verbose_name=b'nominal upload rate', max_digits=6, decimal_places=3, blank=True)),
                 ('bandwidth', models.IntegerField(null=True, verbose_name=b'internet bandwidth', blank=True)),
@@ -58,6 +61,7 @@ class Migration(migrations.Migration):
                 ('active', models.BooleanField(default=True)),
                 ('country', models.ForeignKey(to='locations.Country', null=True)),
                 ('isp', models.ForeignKey(to='isp.ISP')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -77,5 +81,10 @@ class Migration(migrations.Migration):
                 ('blob', models.TextField()),
                 ('ndt', models.ForeignKey(to='NDT.NDT')),
             ],
+        ),
+        migrations.AddField(
+            model_name='ndt',
+            name='ndt_profile',
+            field=models.ForeignKey(to='NDT.NDTProfile', null=True),
         ),
     ]

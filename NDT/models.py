@@ -1,10 +1,8 @@
-from django.db import models
 from django.utils.translation import ugettext as _
 from accounts.models import User
 from isp.models import ISP
 from locations.models import Country
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
+from django.contrib.gis.db import models
 from random import SystemRandom
 import hashlib
 
@@ -32,14 +30,13 @@ class NDTProfile(models.Model):
     user = models.ForeignKey(User, null=True)
     # 5 decimal places for latitude and longitude is accurate to within ~ 1.11 meters
     name = models.CharField(max_length=20, blank=False, null=False)
-    latitude = models.DecimalField(max_digits=8, decimal_places=5, blank=True, null=True)
-    longitude = models.DecimalField(max_digits=8, decimal_places=5, blank=True, null=True)
+    location = models.PointField(help_text='Represented as (longitude, latitude)', blank=True, null=True)
     nominal_download_rate = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True,
                                                 verbose_name='nominal download rate')
     nominal_upload_rate = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True,
                                               verbose_name='nominal upload rate')
     bandwidth = models.IntegerField(blank=True, null=True, verbose_name='internet bandwidth')
-    price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     contract = models.BooleanField(default=False, verbose_name='on contract?')
     service_type = models.CharField(choices=SERVICE_TYPE_CHOICES, max_length=20, null=False,
                                     blank=False)
@@ -51,7 +48,11 @@ class NDTProfile(models.Model):
     province = models.CharField(max_length=64, null=True)
     city = models.CharField(null=True, max_length=64)
     promotion = models.NullBooleanField()
-    isp = models.ForeignKey(ISP)
+    isp = models.ForeignKey(ISP, null=True, blank=True)
+    isp_name = models.CharField(max_length=64, null=True, blank=True, help_text="Entered by the user when his ISP is "
+                                                                                "not listed")
+    hash = models.TextField(max_length=512, null=True, blank=True, db_index=True,
+                            verbose_name='hash value used for UI identification')
     active = models.BooleanField(default=True)
 
     def __unicode__(self):
@@ -83,21 +84,20 @@ class NDT(models.Model):
     nominal_upload_rate = models.FloatField(null=True, blank=True,
                                             verbose_name='Theoretical Upload Rate (Kb)')
     latency = models.DecimalField(max_digits=6, decimal_places=3, default=0, null=False, blank=False)
-    # 5 decimal places for latitude and longitude is accurate to within ~ 1.11 meters
-    latitude = models.DecimalField(max_digits=8, decimal_places=5, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=8, decimal_places=5, null=True, blank=True)
+    location = models.PointField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     # Bandwidth is in Kilobytes
     bandwidth = models.IntegerField(blank=True, null=True, verbose_name='internet bandwidth (KB)')
-    price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     city = models.CharField(null=True, max_length=64)
     country = models.ForeignKey(Country, null=True)
+    isp = models.ForeignKey(ISP, null=True, blank=True)
     isp_name = models.CharField(max_length=64, null=True)
     service_type = models.CharField(choices=SERVICE_TYPE_CHOICES, max_length=20, null=True,
                                     blank=True, default='Home')
     province = models.CharField(max_length=64, null=True)
     rating_general = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='general rating')
-    hash = models.CharField(max_length=100, unique=True, default=_create_hash,
+    hash = models.TextField(max_length=512, unique=True, default=_create_hash, db_index=True,
                             verbose_name='unique hash value used for UI identification')
     average_index = models.DecimalField(max_digits=5, decimal_places=2, default=1, blank=False,
                                         null=False, verbose_name='Number of test results contributing to the average')
@@ -113,10 +113,9 @@ class Web100(models.Model):
 
 class Server(models.Model):
     name = models.CharField(max_length=20, blank=False, null=False, verbose_name=u'Server Name')
-    country = models.ForeignKey(Country, null=False, verbose_name=u'Country Name')
-    url = models.URLField(max_length=500, verbose_name=u'Server URL')
+    url = models.CharField(max_length=500, verbose_name=u'Server URL')
     active = models.BooleanField(default=True, verbose_name=u'Server Active')
 
     def __unicode__(self):
-        return u"Server name: {0} in {1}.".format(self.name, self.country)
+        return u"Server name: {0}.".format(self.name)
 
